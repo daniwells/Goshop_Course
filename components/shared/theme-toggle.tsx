@@ -10,7 +10,7 @@ export default function themeToggle() {
 
     const {setTheme} = useTheme();
     return <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
             <Button
                 variant="outline"
                 size="icon"

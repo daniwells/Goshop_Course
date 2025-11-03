@@ -1,14 +1,18 @@
 'use client';
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu"
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
+import { 
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
 import { SunIcon, MoonIcon } from "lucide-react"
 import { useTheme } from "next-themes";
 
-export default function themeToggle() {
-
+export default function ThemeToggle() {
     const {setTheme} = useTheme();
+
     return <DropdownMenu>
         <DropdownMenuTrigger asChild>
             <Button

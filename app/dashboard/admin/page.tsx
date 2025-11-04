@@ -1,5 +1,7 @@
+import CategoryDetails from "@/components/dashboard/forms/category-details"
+
 export default function DashboardPage() {
   return (
-    <div>Admin Dashboard</div>
+    <CategoryDetails/>
   )
 }

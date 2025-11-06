@@ -10,6 +10,8 @@ import { ClerkProvider } from '@clerk/nextjs'
 // Shadcn
 import { Toaster } from "@/components/ui/sonner";
 
+// Provider
+import ModalProvider from "@/providers/modal-provider";
 
 const interFont = Inter({subsets: ['latin']})
 const barlowFont = Barlow({
@@ -41,7 +43,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <ModalProvider>
+              {children}
+            </ModalProvider>
             <Toaster richColors/>
           </ThemeProvider>
         </body>

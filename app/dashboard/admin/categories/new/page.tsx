@@ -7,7 +7,7 @@ export default function AdminNewCategoryPage() {
 
     return (
         <div className="w-full">
-            <CategoryDetails cloudinary_key={CLUDINARY_CLOUD_KEY} />
+            <CategoryDetails />
         </div>
     )
 }

@@ -1,4 +1,5 @@
 "use server";
+
 // Function: upsertCategory
 // Description: Upserts a category into the database, updating if it exists or creating a ne one if not.
 // Permission Level: Admin only
@@ -64,4 +65,46 @@ export const upsertCategory = async (category: Category) => {
         console.log(error);
         throw error;
     }
+}
+
+// Function: getAllCategories
+// Description: Retrieves all categories from database
+// Permission Level: Public
+// Returns: Array of categories sorted by updateAt date in descending order.
+export const getAllCategories = async () => {
+    const categories = db.category.findMany({
+        orderBy: { updatedAt: "desc" }
+    });
+
+    return categories
+}
+
+// Function: getCategory
+// Description: Retrieves a specific category from the database.
+// Permission Level: Public
+// Parameters:
+// - categoryId: The ID of the category to be retrieved.
+// Returns: Details of the requested category.
+export const getCategory = async (categoryId: string) => {
+    const category = await db.category.findUnique({
+        where: {
+            id: categoryId,
+        }
+    });
+    return category;
+}
+
+// Function: deleteCategory
+// Description: Deletes a category from database.
+// Permission Level: Admin only
+// Parameters:
+// - categoryId: The ID of the category to be deleted.
+// Returns: Response indicating success or failure of the deletion operation.
+export const deleteCategory = async (categoryId: string) => {
+    const user = await currentUser();
+
+    if(!user) return;
+    
+    if(user.privateMetadata.role !== "ADMIN")
+        throw new Error("Unauthorized Access: Admin Privileges Required for Entry.")
 }

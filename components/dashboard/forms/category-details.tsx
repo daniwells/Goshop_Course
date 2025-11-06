@@ -31,10 +31,9 @@ import { upsertCategory } from "@/queries/category";
 
 interface CategoryDetailsProps {
     data?: Category,
-    cloudinary_key: string;
 }
 
-const CategoryDetails: FC<CategoryDetailsProps> = ({ data, cloudinary_key }) => {
+const CategoryDetails: FC<CategoryDetailsProps> = ({ data }) => {
     const router = useRouter();
 
     const form = useForm<z.infer<typeof CategoryFormSchema>>({
@@ -116,16 +115,15 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({ data, cloudinary_key }) => 
                 <Form {...form}>
                     <form 
                         onSubmit={form.handleSubmit(handleSubmit)}
-                        className="space-y-4"
+                        className="space-y-4 "
                     >
                         <FormField
                             control={form.control}
                             name="image"
                             render={({ field })=>(
-                                <FormItem>
-                                    <FormControl>
+                                <FormItem className="flex justify-center">
+                                    <FormControl className="bg-red" >
                                         <ImageUpload
-                                            cloudinary_key={cloudinary_key}
                                             type="profile"
                                             value={field.value.map((image) => image.url)}
                                             disabled={isLoading}

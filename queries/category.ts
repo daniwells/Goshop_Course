@@ -86,6 +86,8 @@ export const getAllCategories = async () => {
 // - categoryId: The ID of the category to be retrieved.
 // Returns: Details of the requested category.
 export const getCategory = async (categoryId: string) => {
+    if(!categoryId) throw new Error('Please provide category ID.');
+
     const category = await db.category.findUnique({
         where: {
             id: categoryId,
@@ -106,5 +108,15 @@ export const deleteCategory = async (categoryId: string) => {
     if(!user) return;
     
     if(user.privateMetadata.role !== "ADMIN")
-        throw new Error("Unauthorized Access: Admin Privileges Required for Entry.")
+        throw new Error("Unauthorized Access: Admin Privileges Required for Entry.");
+
+    if(!categoryId) throw new Error('Please provide category ID.');
+
+    const response = await db.category.delete({
+        where: {
+            id: categoryId
+        }
+    });
+
+    return response;
 }

@@ -10,6 +10,8 @@ import DataTable from "@/components/ui/data-table";
 // Queries
 import { getAllCategories } from "@/queries/category";
 
+import { columns } from "./columns";
+
 
 export default async function AdminCategoriesPage() {
   const categories = await getAllCategories();
@@ -33,6 +35,6 @@ export default async function AdminCategoriesPage() {
     filterValue="name"
     data={categories}
     searchPlaceholder="Search category name..."
-    columns={[]}
+    columns={columns}
   />
 }

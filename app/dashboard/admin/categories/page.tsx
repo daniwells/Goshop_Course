@@ -22,16 +22,14 @@ export default async function AdminCategoriesPage() {
   if(!CLOUDINARY_CLOUD_KEY) return null
 
   return <DataTable 
-    
     actionButtonText={
       <>
         <Plus size={15} />
         Create category
       </>
     } 
-    modalChildren={
-      <CategoryDetails/>
-    }
+    modalChildren={<CategoryDetails/>}
+    newTabLink="/dashboard/admin/categories/new"
     filterValue="name"
     data={categories}
     searchPlaceholder="Search category name..."

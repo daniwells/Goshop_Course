@@ -23,34 +23,36 @@ model User {
   role    Role   @default(USER)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
+
+  stores Store[] @relation("UserStores")
 }
 
 model Category {
-  id        String   @id @default(uuid())
-  name      String
-  image     String
-  url       String
-  featured  Boolean  @default(false)
-  
+  id       String  @id @default(uuid())
+  name     String
+  image    String
+  url      String
+  featured Boolean @default(false)
+
   subCategories SubCategory[] @relation("CategoryToSubCategory")
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model SubCategory {
-  id        String   @id @default(uuid())
-  name      String
-  image     String
-  url       String
-  featured  Boolean  @default(false)
+  id       String  @id @default(uuid())
+  name     String
+  image    String
+  url      String
+  featured Boolean @default(false)
 
   categoryId String
-  category Category @relation("CategoryToSubCategory", fields:[categoryId], references: [id])
+  category   Category @relation("CategoryToSubCategory", fields: [categoryId], references: [id])
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 
   @@index([categoryId])
 }

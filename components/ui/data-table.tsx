@@ -88,7 +88,7 @@ export default function DataTable<TData, TValue>({
         <div className="flex gap-x-2">
           {modalChildren && (
             <Button
-              className="flex- gap-2"
+              className="flex- gap-2 cursor-pointer"
               onClick={() => {
                 if (modalChildren)
                   setOpen(
@@ -106,7 +106,7 @@ export default function DataTable<TData, TValue>({
           )}
           {newTabLink && (
             <Link href={newTabLink}>
-              <Button variant="outline">
+              <Button variant="outline" className="cursor-pointer">
                 <FilePlus2 className="me-1" /> Create in new page
               </Button>
             </Link>

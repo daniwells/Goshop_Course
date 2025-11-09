@@ -81,13 +81,13 @@ const ImageUpload:FC<ImageUploadProps> = ({
                 }
             </CldUploadWidget>
         </div>;
-    }else if(type=="cover"){
+    }else if(type == "cover"){
         return <div 
             style={{ height: "348px" }}
             className="relative w-full bg-gray-100 rounded-lg bg-gradiant-to-b from-gray-100 bia-gray-100 to-gray-400 overflow-hidden"
         >
             {
-                ValidityState.length > 0 && <Image 
+                value.length > 0 && <Image 
                     src={value[0]}
                     alt=""
                     width={1200}

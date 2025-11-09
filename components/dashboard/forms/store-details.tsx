@@ -126,7 +126,7 @@ const StoreDetails: FC<StoreDetailsProps> = ({ data }) => {
                                 control={form.control}
                                 name="logo"
                                 render={({ field })=>(
-                                    <FormItem className="absolute -bottom-20 -left-48 z-10 inset-x-72">
+                                    <FormItem className="absolute -bottom-20 -left-48 z-10 inset-x-40">
                                         <FormControl className="bg-red" >
                                             <ImageUpload
                                                 type="profile"

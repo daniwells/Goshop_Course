@@ -1,12 +1,5 @@
 "use server";
 
-// Function: upsertCategory
-// Description: Upserts a category into the database, updating if it exists or creating a ne one if not.
-// Permission Level: Admin only
-// Parameters:
-// - category: Category object containing details of the category to be upserted.
-// Returns: Updated or newly created category details.
-
 // Clerk
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -16,6 +9,12 @@ import { db } from "@/lib/db";
 // Prisma
 import { Category } from "@/lib/generated/prisma/client"
 
+// Function: upsertCategory
+// Description: Upserts a category into the database, updating if it exists or creating a ne one if not.
+// Permission Level: Admin only
+// Parameters:
+// - category: Category object containing details of the category to be upserted.
+// Returns: Updated or newly created category details.
 export const upsertCategory = async (category: Category) => {
     try {
         const user = await currentUser();

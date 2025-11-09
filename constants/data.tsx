@@ -38,7 +38,7 @@ export const adminDashboardSidebarOptions: DashboardSidebarMenuInterface[] = [
   },
 ];
 
-export const SellerDashboardSidebarOptions: DashboardSidebarMenuInterface[] = [
+export const sellerDashboardSidebarOptions: DashboardSidebarMenuInterface[] = [
   {
     label: "Dashboard",
     icon: "dashboard",

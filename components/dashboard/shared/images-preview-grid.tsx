@@ -6,54 +6,51 @@ import Image from "next/image";
 import NoImageImg from "@/public/assets/images/no_image_2.png"
 
 // Utils
-import { cn, getGridClassName } from "@/lib/utils";
-// import { cn, getDominantColors, getGridClassName } from "@/lib/utils";
+// import { cn, getGridClassName } from "@/lib/utils";
+import { cn, getDominantColors, getGridClassName } from "@/lib/utils";
 
 // Icons
 import { Trash } from "lucide-react";
-// import ColorPalette from "./color-palette";
+import ColorPalette from "./color-palette";
 
 interface ImagesPreviewGridProps {
   images: { url: string }[];
   onRemove: (value: string) => void;
-//   colors?: { color: string }[];
-//   setColors: Dispatch<SetStateAction<{ color: string }[]>>;
+  colors?: { color: string }[];
+  setColors: Dispatch<SetStateAction<{ color: string }[]>>;
 }
 
 const ImagesPreviewGrid: FC<ImagesPreviewGridProps> = ({
   images,
   onRemove,
-//   colors,
-//   setColors,
+  colors,
+  setColors,
 }) => {
-    // Calculate the number of images
     let imagesLength = images.length;
-
 
     const GridClassName = getGridClassName(imagesLength);
 
-
     const [colorPalettes, setColorPalettes] = useState<string[][]>([]);
 
-    //   useEffect(() => {
-    //     const fecthColors = async () => {
-    //       const palettes = await Promise.all(
-    //         images.map(async (img) => {
-    //           try {
-    //             const colors = await getDominantColors(img.url);
-    //             return colors;
-    //           } catch (error) {
-    //             return [];
-    //           }
-    //         })
-    //       );
-    //       setColorPalettes(palettes);
-    //     };
+    useEffect(() => {
+        const fecthColors = async () => {
+            const palettes = await Promise.all(
+            images.map(async (img) => {
+                try {
+                const colors = await getDominantColors(img.url);
+                return colors;
+                } catch (error) {
+                return [];
+                }
+            })
+        );
+        setColorPalettes(palettes);
+    };
 
-    //     if (imagesLength > 0) {
-    //       fecthColors();
-    //     }
-    //   }, [images]);
+    if (imagesLength > 0) {
+        fecthColors();
+    }
+    }, [images]);
 
     if (imagesLength === 0) {
         return (
@@ -103,11 +100,11 @@ const ImagesPreviewGrid: FC<ImagesPreviewGridProps> = ({
                                 }
                             )}
                         >
-                            {/* <ColorPalette
+                            <ColorPalette
                                 colors={colors}
                                 setColors={setColors}
                                 extractedColors={colorPalettes[i]}
-                            /> */}
+                            />
                             <button
                                 className="Btn"
                                 type="button"

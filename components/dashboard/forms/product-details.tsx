@@ -14,6 +14,7 @@ import { toast } from "sonner";
 // Custom components
 import ImageUpload from "../shared/image-upload";
 import ImagesPreviewGrid from "../shared/images-preview-grid";
+import ClickToAddInputs from "./click-to-add";
 
 // Ui
 import { AlertDialog } from "@/components/ui/alert-dialog";
@@ -155,14 +156,14 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                                 <ImagesPreviewGrid
                                                     images={form.getValues().images}
                                                     onRemove={(url) => {
-                                                    const updatedImages = images.filter(
-                                                        (img) => img.url !== url
-                                                    );
-                                                    setImages(updatedImages);
-                                                    field.onChange(updatedImages);
+                                                        const updatedImages = images.filter(
+                                                            (img) => img.url !== url
+                                                        );
+                                                        setImages(updatedImages);
+                                                        field.onChange(updatedImages);
                                                     }}
-                                                    // colors={colors}
-                                                    // setColors={setColors}
+                                                    colors={colors}
+                                                    setColors={setColors}
                                                 />
                                                 <FormMessage className="!mt-4" />
                                                 <ImageUpload
@@ -172,17 +173,17 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                                     disabled={isLoading}
                                                     onChange={(url) => {
                                                     setImages((prevImages) => {
-                                                        const updatedImages = [...prevImages, { url }];
-                                                        field.onChange(updatedImages);
-                                                        return updatedImages;
-                                                    });
+                                                            const updatedImages = [...prevImages, { url }];
+                                                            field.onChange(updatedImages);
+                                                            return updatedImages;
+                                                        });
                                                     }}
                                                     onRemove={(url) =>
-                                                    field.onChange([
-                                                        ...field.value.filter(
-                                                        (current) => current.url !== url
-                                                        ),
-                                                    ])
+                                                        field.onChange([
+                                                            ...field.value.filter(
+                                                            (current) => current.url !== url
+                                                            ),
+                                                        ])
                                                     }
                                                 />
                                             </div>
@@ -190,6 +191,20 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                     </FormItem>
                                 )}
                             />
+                            <div className="w-full flex flex-col gap-y-3 xl:pl-5">
+                                <ClickToAddInputs
+                                    details={data?.colors || colors}
+                                    setDetails={setColors}
+                                    initialDetail={{ color: "" }}
+                                    header="Colors"
+                                    colorPicker
+                                />
+                                {/* {errors.colors && (
+                                    <span className="text-sm font-medium text-destructive">
+                                        {errors.colors.message}
+                                    </span>
+                                )} */}
+                            </div>
                         </div>
                         <FormField 
                             disabled={isLoading}

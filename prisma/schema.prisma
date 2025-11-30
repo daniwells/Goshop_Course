@@ -99,7 +99,7 @@ model Store {
 model Product {
   id          String @id @default(uuid())
   name        String
-  description String
+  description String @db.LongText
   slug        String
   brand       String
   rating      Float  @default(0)
@@ -116,7 +116,12 @@ model Product {
   subCategoryId String
   subCategory   SubCategory @relation("SubCategoryToProduct", fields: [subCategoryId], references: [id])
 
-  variants ProductVariant[] @relation("ProductToProductVariant")
+  offerTagId String?
+  offerTag   OfferTag? @relation("OfferTagToProduct", fields: [offerTagId], references: [id])
+
+  specs     Spec[]           @relation("ProductSpec")
+  variants  ProductVariant[] @relation("ProductToProductVariant")
+  questions Question[]       @relation("ProductQuestion")
 
   @@index([storeId])
   @@index([categoryId])
@@ -126,12 +131,12 @@ model Product {
 model ProductVariant {
   id                 String  @id @default(uuid())
   variantName        String
-  variantDescription String
+  variantDescription String? @db.LongText
+  variantImage       String
   slug               String  @unique
   isSale             Boolean @default(false)
+  saleEndDate        String?
   keywords           String
-  // seoTitle
-  // seoDescription
   sku                String
 
   createdAt DateTime @default(now())
@@ -140,6 +145,7 @@ model ProductVariant {
   productId String
   product   Product @relation("ProductToProductVariant", fields: [productId], references: [id])
 
+  specs  Spec[]                @relation("ProductVariantSpec")
   sizes  Size[]                @relation("ProductVariantToSize")
   images ProductVariantImage[] @relation("ProductVariantToVariantImage")
   colors Color[]               @relation("ProductVariantToColor")
@@ -186,4 +192,45 @@ model Color {
 
   productVariantId String
   productVariant   ProductVariant @relation("ProductVariantToColor", fields: [productVariantId], references: [id])
+}
+
+model Spec {
+  id    String @id @default(uuid())
+  name  String
+  value String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  productId String?
+  product   Product? @relation("ProductSpec", fields: [productId], references: [id], onDelete: Cascade)
+
+  variantId String?
+  variant   ProductVariant? @relation("ProductVariantSpec", fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([variantId])
+}
+
+model Question {
+  id       String @id @default(uuid())
+  question String
+  answer   String
+
+  productId String
+  product   Product @relation("ProductQuestion", fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model OfferTag {
+  id   String @id @default(uuid())
+  name String
+  url  String  @unique
+
+  products Product[] @relation("OfferTagToProduct")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }

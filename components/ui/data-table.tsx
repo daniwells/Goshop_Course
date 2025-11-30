@@ -95,6 +95,7 @@ export default function DataTable<TData, TValue>({
                     <CustomModal
                       heading={heading || ""}
                       subheading={subheading || ""}
+                      maxWidth="2000px"
                     >
                       {modalChildren}
                     </CustomModal>
@@ -115,8 +116,8 @@ export default function DataTable<TData, TValue>({
       </div>
 
       {/* Table */}
-      <div className=" border bg-background rounded-lg">
-        <Table className="">
+      <div className="border bg-background rounded-lg">
+        <Table>
           {/* Table header */}
           {!noHeader && (
             <TableHeader>

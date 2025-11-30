@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils-client";
 
 type Props = {
   heading?: string;
@@ -41,9 +41,8 @@ const CustomModal = ({
           <DialogTitle className="text-2xl font-bold">{heading || ""}</DialogTitle>
           
           {subheading && <DialogDescription>{subheading}</DialogDescription>}
-
-          {children}
         </DialogHeader>
+        {children}
       </DialogContent>
     </Dialog>
   );

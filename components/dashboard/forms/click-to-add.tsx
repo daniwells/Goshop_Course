@@ -1,8 +1,16 @@
+// React, Next.js
+import React, { FC, useState } from "react";
+import { SketchPicker } from "react-color";
+
+// UI Components
 import { Input } from "@/components/ui/input";
-import React, { FC } from "react";
+
+// Icons
+import { PaintBucket } from "lucide-react";
+
 
 export interface Detail {
-    [key: string]: string | number | boolean | undefined;
+    [key: string]: string | number | undefined;
 }
 
 interface ClickToAddInputsProps {
@@ -10,7 +18,7 @@ interface ClickToAddInputsProps {
     setDetails: React.Dispatch<React.SetStateAction<Detail[]>>;
     header: string;
     initialDetail: Detail;
-
+    colorPicker?: boolean;
 }
 
 const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
@@ -18,7 +26,27 @@ const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
     setDetails,
     header,
     initialDetail = {},
+    colorPicker
 }) => {
+    const [ colorPickerIndex, setColorPickerIndex ] = useState<number | null>();
+
+    const handleDetailsChange = (index: number, property: string, value: string | number) => {
+        const updatedDetails = details.map((detail,i)=>i===index ? {...detail, [property]: value} : detail)
+
+        setDetails(updatedDetails);
+    };
+
+    const handleAddDetail = () => {
+        setDetails([...details, {...initialDetail}]);
+    };
+
+    const handleRemove = (index: number) => {
+        if(details.length === 1) return;
+
+        const updatedDetails = details.filter((_,i) => i != index);
+        setDetails(updatedDetails);
+    }
+
     const PlusButton = ({ onClick }: { onClick: () => void }) => {
         return <button
             type="button"
@@ -68,7 +96,7 @@ const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
 
     return <div className="flex flex-col gap-y-4">
         <div>{header}</div>
-        {details.length === 0 && <PlusButton onClick={() => {}}/>}
+        {details.length === 0 && <PlusButton onClick={handleAddDetail}/>}
         {details.map((detail, index) => (
             <div key={index} className="flex items-center gap-x-4">
                 {
@@ -77,6 +105,29 @@ const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
                             key={propIndex}
                             className="flex items-center gap-x-4"
                         >
+                            { 
+                                property === "color" && colorPicker && 
+                                    <div className="flex gap-x-4">
+                                        <button 
+                                            type="button"
+                                            className="cursor-pointer"
+                                            onClick={() => setColorPickerIndex(colorPickerIndex === index ? null : index)}
+                                        >
+                                            <PaintBucket/>
+                                            <span
+                                                className="w-8 h-8 rounded-full"
+                                                style={{backgroundColor:detail[property] as string}}
+                                            />
+                                        </button>
+                                    </div> 
+                            }
+                            { 
+                                colorPickerIndex === index && property === "color" && 
+                                    <SketchPicker
+                                        color={detail[property] as string}
+                                        onChange={(e) => handleDetailsChange(index, property, e.hex)}
+                                    />
+                            }
                             <Input
                                 className="w-28"
                                 type={typeof detail[property]==="number" ? "number" : "text"}
@@ -84,16 +135,23 @@ const ClickToAddInputs: FC<ClickToAddInputsProps> = ({
                                 placeholder={property}
                                 value={detail[property] as string}
                                 min={typeof detail[property] === "number" ? 0 : undefined}
+                                step="0.01"
+                                onChange={(e)=>handleDetailsChange(
+                                    index, 
+                                    property, 
+                                    e.target.type === "number" 
+                                        ? parseFloat(e.target.value) 
+                                        : e.target.value, 
+                                )}
                             />
                         </div>
                     ))
                 }
+            <MinusButton onClick={() => handleRemove(index)}/>
+            <PlusButton onClick={handleAddDetail}/>
             </div>
         ))}
-        <MinusButton onClick={() => {}}/>
-        <PlusButton onClick={() => {}}/>
     </div>
-
 }
  
 export default ClickToAddInputs;

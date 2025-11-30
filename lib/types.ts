@@ -1,5 +1,5 @@
 import { getAllSubCategories } from "@/queries/subCategory";
-
+import { getAllStoreProducts } from "@/queries/product";
 
 export interface DashboardSidebarMenuInterface {
     label: string;
@@ -20,15 +20,25 @@ export type ProductWithVariantType = {
   description: string;
   variantName: string;
   variantDescription: string;
+  variantImage: string;
   images: { url: string }[];
   categoryId: string;
   subCategoryId: string;
   isSale: boolean;
+  saleEndDate?: string;
   brand: string;
   sku: string;
   colors: { color: string }[];
   sizes: { size: string; quantity: number; price: number; discount: number; }[];
   keywords: string[];
   createdAt: Date;
-  updatedAt: Date; 
-}
+  updatedAt: Date;
+  product_specs: { name: string; value: string }[];
+  variant_specs: { name: string; value: string }[];
+  questions: {question: string, answer: string}[];
+  offerTagId: string;
+};
+
+export type StoreProductType = Awaited<
+  ReturnType<typeof getAllStoreProducts>
+>[0];

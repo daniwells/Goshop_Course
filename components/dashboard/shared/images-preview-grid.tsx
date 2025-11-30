@@ -7,7 +7,7 @@ import NoImageImg from "@/public/assets/images/no_image_2.png"
 
 // Utils
 // import { cn, getGridClassName } from "@/lib/utils";
-import { cn, getDominantColors, getGridClassName } from "@/lib/utils";
+import { cn, getDominantColors, getGridClassName } from "@/lib/utils/utils-client";
 
 // Icons
 import { Trash } from "lucide-react";

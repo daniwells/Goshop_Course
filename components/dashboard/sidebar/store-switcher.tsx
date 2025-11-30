@@ -3,7 +3,7 @@
 import { FC, useState } from "react";
 import { PopoverTrigger, Popover, PopoverContent } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils-client";
 import { Check, ChevronsUpDown, PlusCircle, StoreIcon } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
 import { useRouter, useParams } from "next/navigation";

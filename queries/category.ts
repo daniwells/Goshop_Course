@@ -64,7 +64,7 @@ export const upsertCategory = async (category: Category) => {
         console.log(error);
         throw error;
     }
-}
+};
 
 // Function: getAllCategories
 // Description: Retrieves all categories from database
@@ -75,8 +75,23 @@ export const getAllCategories = async () => {
         orderBy: { updatedAt: "desc" }
     });
 
-    return categories
-}
+    return categories;
+};
+
+// Function: getAllSubCategoriesForCategory
+// Description: Retrieves all subCategories from database
+// Permission Level: Public
+// Returns: Array of subCategories of category sorted by updateAt date in descending order.
+export const getAllSubCategoriesForCategory = async (categoryId: string) => {
+    const subCategories = db.subCategory.findMany({
+        where: {
+            categoryId: categoryId,
+        },
+        orderBy: { updatedAt: "desc" }
+    });
+
+    return subCategories;
+};
 
 // Function: getCategory
 // Description: Retrieves a specific category from the database.
@@ -93,7 +108,7 @@ export const getCategory = async (categoryId: string) => {
         }
     });
     return category;
-}
+};
 
 // Function: deleteCategory
 // Description: Deletes a category from database.
@@ -118,4 +133,4 @@ export const deleteCategory = async (categoryId: string) => {
     });
 
     return response;
-}
+};

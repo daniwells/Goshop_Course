@@ -4,12 +4,11 @@ import ProductDetails from "@/components/dashboard/forms/product-details";
 export default async function SellerNewProductPage({
     params
 }: {
-    params: {storeUrl: String}
+    params: {storeUrl: string}
 }) {
     const resolvedParams = await params;
     const categories = await getAllCategories();
 
-    
     return <div className="w-full">
         <ProductDetails 
             categories={categories}

@@ -10,7 +10,7 @@ import {
     CommandItem
 } from "@/components/ui/command"
 import { icons } from "@/constants/icons"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/utils-client"
 import Link from "next/link"
 import { usePathname } from "next/navigation";
 

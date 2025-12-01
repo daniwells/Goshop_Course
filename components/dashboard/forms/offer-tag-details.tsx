@@ -54,8 +54,8 @@ const OfferTagDetails: FC<OfferTagDetailsProps> = ({ data }) => {
     mode: "onChange",
     resolver: zodResolver(OfferTagFormSchema),
     defaultValues: {
-      name: data?.name,
-      url: data?.url,
+      name: data?.name ?? "",
+      url: data?.url ?? "",
     },
   });
 
@@ -64,33 +64,36 @@ const OfferTagDetails: FC<OfferTagDetailsProps> = ({ data }) => {
   useEffect(() => {
     if (data) {
       form.reset({
-        name: data?.name,
-        url: data?.url,
+        name: data?.name ?? "",
+        url: data?.url ?? "",
       });
     }
   }, [data, form]);
 
-  const handleSubmit = async (values: z.infer<typeof OfferTagFormSchema>) => {
+  const handleSubmit = async () => {
+    const values = form.getValues();
+    console.log(values)
     try {
-      const response = await upsertOfferTag({
-        id: data?.id ? data.id : v4(),
-        name: values.name,
-        url: values.url,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+        console.log(values)
+        const response = await upsertOfferTag({
+            id: data?.id ? data.id : v4(),
+            name: values.name,
+            url: values.url,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        });
 
-      toast(
-        data?.id
-          ? "Offer tag has been updated."
-          : `Congratulations! '${response?.name}' is now created.`
-      );
+        toast.success(
+            data?.id
+                ? "Offer tag has been updated."
+                : `Congratulations! '${response?.name}' is now created.`
+        );
 
-      if (data?.id) {
+        if (data?.id) {
         router.refresh();
-      } else {
+        } else {
         router.push("/dashboard/admin/offer-tags");
-      }
+        }
     } catch (error: any) {
       console.log(error);
       toast.error("Oops!",{description: error.toString()});

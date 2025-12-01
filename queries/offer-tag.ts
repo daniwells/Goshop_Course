@@ -12,12 +12,10 @@ export const getAllOfferTags = async (storeUrl?: string) => {
   let storeId: string | undefined;
 
   if (storeUrl) {
-    // Retrieve the storeId based on the storeUrl
     const store = await db.store.findUnique({
       where: { url: storeUrl },
     });
 
-    // If no store is found, return an empty array or handle as needed
     if (!store) {
       return [];
     }
@@ -25,7 +23,6 @@ export const getAllOfferTags = async (storeUrl?: string) => {
     storeId = store.id;
   }
 
-  // Retrieve all offer tags from the database
   const offerTgas = await db.offerTag.findMany({
     where: storeId
       ? {
@@ -45,7 +42,7 @@ export const getAllOfferTags = async (storeUrl?: string) => {
     },
     orderBy: {
       products: {
-        _count: "desc", // Order by the count of associated products in descending order
+        _count: "desc",
       },
     },
   });
@@ -60,22 +57,17 @@ export const getAllOfferTags = async (storeUrl?: string) => {
 // Returns: Updated or newly created offer tag details.
 export const upsertOfferTag = async (offerTag: OfferTag) => {
   try {
-    // Get current user
     const user = await currentUser();
 
-    // Ensure user is authenticated
     if (!user) throw new Error("Unauthenticated.");
 
-    // Verify admin permission
     if (user.privateMetadata.role !== "ADMIN")
       throw new Error(
         "Unauthorized Access: Admin Privileges Required for Entry."
       );
 
-    // Ensure offer tag data is provided
     if (!offerTag) throw new Error("Please provide offer tag data.");
 
-    // Throw error if offer tag with the same name or URL already exists
     const existingOfferTag = await db.offerTag.findFirst({
       where: {
         AND: [
@@ -91,7 +83,6 @@ export const upsertOfferTag = async (offerTag: OfferTag) => {
       },
     });
 
-    // Throw error if offer tag with the same name or URL already exists
     if (existingOfferTag) {
       let errorMessage = "";
       if (existingOfferTag.name === offerTag.name) {
@@ -102,7 +93,6 @@ export const upsertOfferTag = async (offerTag: OfferTag) => {
       throw new Error(errorMessage);
     }
 
-    // Upsert offer tag into the database
     const offerTagDetails = await db.offerTag.upsert({
       where: {
         id: offerTag.id,
@@ -112,7 +102,6 @@ export const upsertOfferTag = async (offerTag: OfferTag) => {
     });
     return offerTagDetails;
   } catch (error) {
-    // Log and re-throw any errors
     console.log(error);
     throw error;
   }
@@ -125,17 +114,14 @@ export const upsertOfferTag = async (offerTag: OfferTag) => {
 //   - offerTagId: The ID of the OfferTag to be retrieved.
 // Returns: Details of the requested OfferTag.
 export const getOfferTag = async (offerTagId: string) => {
-  // Ensure offerTag ID is provided
   if (!offerTagId) throw new Error("Please provide offer tag ID.");
 
-  // Retrieve the offer tag from the database using the provided ID
   const offerTag = await db.offerTag.findUnique({
     where: {
       id: offerTagId,
     },
   });
 
-  // Return the retrieved offer tag details
   return offerTag;
 };
 
@@ -147,22 +133,17 @@ export const getOfferTag = async (offerTagId: string) => {
 // Returns: A success message if the offer tag is deleted, or an error if it fails.
 export const deleteOfferTag = async (offerTagId: string) => {
   try {
-    // Get current user
     const user = await currentUser();
 
-    // Ensure user is authenticated
     if (!user) throw new Error("Unauthenticated.");
 
-    // Verify admin permission
     if (user.privateMetadata.role !== "ADMIN")
       throw new Error(
         "Unauthorized Access: Admin Privileges Required for Entry."
       );
 
-    // Ensure the offerTagId is provided
     if (!offerTagId) throw new Error("Please provide the offer tag ID.");
 
-    // Delete offer tag from the database
     const response = await db.offerTag.delete({
       where: {
         id: offerTagId,
@@ -170,7 +151,6 @@ export const deleteOfferTag = async (offerTagId: string) => {
     });
     return response;
   } catch (error) {
-    // Log and re-throw any errors
     console.log(error);
     throw error;
   }

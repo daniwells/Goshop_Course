@@ -139,7 +139,7 @@ const ImageUpload:FC<ImageUploadProps> = ({
                                     key={imageUrl}
                                     className="relative w-[200px] min-h-[100px] max-h-[200px]"
                                 >
-                                    <div className="z-10 absolute top-2 right-2">
+                                    <div className="z-100 absolute top-2 right-2">
                                         <Button
                                             onClick={() => onRemove(imageUrl)}
                                             type="button"

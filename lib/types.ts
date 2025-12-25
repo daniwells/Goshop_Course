@@ -1,5 +1,7 @@
 import { getAllSubCategories } from "@/queries/subCategory";
 import { getAllStoreProducts } from "@/queries/product";
+import { getStoreDefaultShippingDetails } from "@/queries/store";
+import { ShippingRate } from "./generated/prisma/client";
 
 export interface DashboardSidebarMenuInterface {
     label: string;
@@ -42,3 +44,13 @@ export type ProductWithVariantType = {
 export type StoreProductType = Awaited<
   ReturnType<typeof getAllStoreProducts>
 >[0];
+
+export type StoreDefaultShippingDetailsType = Awaited<
+  ReturnType<typeof getStoreDefaultShippingDetails>
+>;
+
+export type CountryWithShippingRatesType = {
+  countryId: string;
+  countryName: string;
+  shippingRate: ShippingRate;
+}

@@ -1,9 +1,9 @@
 import ThemeToggle from "@/components/shared/theme-toggle";
-// import { updateVariantImage } from "@/migration-scripts/migrate-variantImage";
 import { UserButton } from "@clerk/nextjs";
+// import { seedCountries } from "@/migration-scripts/seed-countries";
 
 export default async function HomePage() {
-  // await updateVariantImage();
+  // await seedCountries();
 
   return (
     <div className="p-5">
@@ -13,6 +13,5 @@ export default async function HomePage() {
       </div>
       Home Page
     </div>
-    
   );
 }

@@ -43,6 +43,28 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --color-blue-primary: #0D6EFD;
+
+  /* Custom colors */
+  --color-blue-primary: #0d6efd;
+
+  --color-orange-background: #fd384f;
+  --color-orange-hover: #e23246;
+  --color-orange-primary: #fa6338;
+  --color-orange-secondary: #d3031c;
+  --color-orange-border: #ffe6e7;
+
+  --color-main-primary: #191919;
+  --color-main-secondary: #757575;
+
+   /* Animations */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  /* Timing functions */
+  --ease-bezier-1: cubic-bezier(.645,.045,.355,1);
+
+  /* Max widths */
+  --max-w-container: 1200px;
 }
 
 body {
@@ -254,4 +276,272 @@ body {
 .user-avatar .cl-avatarBox {
   width: 70px !important;
   height: 70px !important;
+}
+
+/*---Custom scrollbar---*/
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Define the thumb style */
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #e0e0e0;
+  border-radius: 5px;
+}
+
+/* User account before */
+.user-menu-item::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 4px;
+  background-color: #fd384f;
+  left: 0;
+}
+
+/* User order filter before */
+.user-orders-table-tr::after {
+  content: "";
+  height: 3px;
+  width: 24px;
+  border-radius: 1.5px;
+  background-color: #fd384f;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  bottom: -12px;
+  animation: expandWith 0.3s;
+}
+
+/* Date time picker */
+.react-datetime-picker__wrapper {
+  border: none !important;
+}
+.react-datetime-picker__inputGroup__input {
+  padding: 0 3px !important;
+  outline-color: #1087ff !important;
+}
+.react-datetime-picker__inputGroup__divider {
+  margin: 0 3px !important;
+}
+
+/* Jodit editor dark mode */
+.jodit_theme_dark.jodit-container {
+  background-color: #1a1b1f !important;
+  border-color: #eeeeee2e !important;
+}
+
+.jodit_theme_dark .jodit-toolbar__box:not(:empty) {
+  background-color: #1a1b1f !important;
+}
+
+.jodit_theme_dark .jodit-wysiwyg {
+  background-color: #1a1b1f !important;
+}
+
+.jodit_theme_dark .jodit-toolbar-button__button:hover svg {
+  stroke: #575757 !important;
+  fill: #575757 !important;
+}
+
+/* Calendar dark mode  */
+.dark .react-calendar {
+  background: #1a1b1f !important;
+}
+.dark .react-calendar__tile:enabled:hover {
+  color: #000;
+}
+.dark .react-calendar__tile--now {
+  color: #000;
+}
+
+/* Multi selct dark mode */
+.dark .rmsc .dropdown-container {
+  background-color: #1a1b1f !important;
+  border-color: #eeeeee2e !important;
+}
+
+.panel-content {
+  background-color: #1a1b1f !important;
+}
+
+.panel-content input:focus {
+  background-color: #1a1b1f !important;
+}
+
+.select-item:hover {
+  background-color: #303236 !important;
+}
+.select-item.selected {
+  background-color: #303236 !important;
+}
+
+/* Home main swiper */
+.awssld__wrapper {
+  border-radius: 6px !important;
+}
+
+.awssld__container {
+  padding-bottom: 36% !important;
+}
+
+.awssld__prev {
+  transform: scale(50%) !important;
+  left: -1rem !important;
+}
+
+.awssld__next {
+  transform: scale(50%) !important;
+  right: -1rem !important;
+}
+
+.swiper {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+.swiper-slide {
+  width: auto !important;
+}
+
+/*  clean product card */
+/* From Uiverse.io by Smit-Prajapati */
+.card {
+  --accent-color: #fd384f;
+  position: relative;
+  width: 240px;
+  background: white;
+  border-radius: 1rem;
+  /* border-top-right-radius: 4rem;*/
+  padding: 0.3rem;
+  /* box-shadow: rgba(100, 100, 111, 0.2) 0px 50px 30px -20px;*/
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.card .image-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: 0.7rem;
+  border-top-right-radius: 4rem;
+  margin-bottom: 1rem;
+}
+
+.card .image-container img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.card .image-container .svg {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+}
+
+.card .image-container .price {
+  position: absolute;
+  right: 0.7rem;
+  bottom: -1rem;
+  background: white;
+  color: var(--accent-color);
+  font-weight: 900;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+  border-radius: 1rem 1rem 2rem 2rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 0px 15px 0px;
+}
+
+.card .favorite {
+  position: absolute;
+  width: 19px;
+  height: 19px;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+}
+
+.card .favorite svg {
+  fill: orangered;
+}
+
+.card .content {
+  padding: 0px 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.card .content .brand {
+  font-weight: 900;
+  color: #a6a6a6;
+}
+
+.card .content .product-name {
+  font-weight: 700;
+  color: #666666;
+  font-size: 0.7rem;
+  margin-bottom: 0.6rem;
+}
+
+.card .content .color-size-container {
+  display: flex;
+  justify-content: space-between;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #a8a8a8;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.card .content .rating {
+  color: #a8a8a8;
+  font-size: 0.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card .button-container {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.card .button-container .button {
+  border-radius: 1.4rem 1.4rem 0.7rem 0.7rem;
+  border: none;
+  padding: 0.5rem 0;
+  background: var(--accent-color);
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.card .button-container .button:hover {
+  background: orangered;
+}
+
+.card .button-container .buy-button {
+  flex: auto;
+}
+
+.card .button-container .cart-button {
+  display: grid;
+  place-content: center;
+  width: 50px;
+}
+
+.card .button-container .cart-button svg {
+  width: 20px;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+.card:hover .image-container {
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.17);
 }

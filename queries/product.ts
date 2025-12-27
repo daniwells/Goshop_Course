@@ -63,7 +63,7 @@ export const upsertProduct = async (product: ProductWithVariantType, storeUrl: s
             slug: productSlug,
             brand: product.brand,
             store: {connect: { id: store.id }},
-            category: {connect: { id: product.productId }},
+            category: {connect: { id: product.categoryId }},
             subCategory: {connect: { id: product.subCategoryId }},
             createdAt: product.createdAt,
             updatedAt: product.updatedAt,

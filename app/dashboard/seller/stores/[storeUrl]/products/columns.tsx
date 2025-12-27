@@ -63,10 +63,11 @@ export const columns: ColumnDef<StoreProductType>[] = [
                         <div key={variant.id} className="flex flex-col gap-y-2 group-hover">
                             <div className="relative cursor-pointer">
                                 <Image
-                                    src={variant.images[0].url}
-                                    alt={`${variant.variantName} image`}
-                                    width={1000}
-                                    className="min-w-72 max-w-72 h-80 rounded-sm object-cover shadow-2xl"
+                                  src={variant.images[0].url}
+                                  alt={`${variant.variantName} image`}
+                                  height={1000}
+                                  width={1000}
+                                  className="w-40 h-40 rounded-full object-cover shadow-2xl"
                                 />
                                 <Link href={`/dashboard/seller/stores/${row.original.store.url}/products/${row.original.id}/variants/${variant.id}`}>
                                     <div 

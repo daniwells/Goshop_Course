@@ -13,11 +13,11 @@ export default async function AdminDashboardLayout({
     const user = await currentUser();
     if(!user || user.privateMetadata.role !== "ADMIN") redirect('/');
 
-    return <div className="w-full h-full">
+    return <div className="w-full">
         <Sidebar isAdmin/>
         <div className="ml-[300px]">
             <Header/>
-            <div className="w-full mt-[75px] p-4">{children}</div>
+            <div className="w-full mt-[75px] p-4 !scroll-y-auto">{children}</div>
         </div>
     </div>
 }

@@ -23,7 +23,7 @@ export const getAllOfferTags = async (storeUrl?: string) => {
     storeId = store.id;
   }
 
-  const offerTgas = await db.offerTag.findMany({
+  const offerTags = await db.offerTag.findMany({
     where: storeId
       ? {
           products: {
@@ -46,7 +46,7 @@ export const getAllOfferTags = async (storeUrl?: string) => {
       },
     },
   });
-  return offerTgas;
+  return offerTags;
 };
 
 // Function: upsertOfferTag

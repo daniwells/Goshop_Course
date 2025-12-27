@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.34.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@hookform/resolvers": "^3.3.4",
+    "@mui/material": "^7.3.6",
     "@prisma/client": "^6.18.0",
     "@prisma/engines": "^6.18.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -35,6 +38,7 @@
     "colorthief": "^2.6.0",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
+    "emotion": "^11.0.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "flag-icons": "^7.5.0",
     "framer-motion": "^12.23.26",

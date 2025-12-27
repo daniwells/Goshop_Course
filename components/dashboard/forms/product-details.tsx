@@ -54,6 +54,9 @@ import { ProductWithVariantType } from "@/lib/types";
 // Jodit text editor
 import JoditEditor from "jodit-react";
 
+// Jodit text editor
+import { JoditField } from "../shared/jodi-field";
+
 interface ProductDetailsProps {
     data?: Partial<ProductWithVariantType>;
     categories: Category[];
@@ -93,25 +96,25 @@ const ProductDetails: FC<ProductDetailsProps> = ({
         mode: "onChange",
         resolver: zodResolver(ProductFormSchema),
         defaultValues: {
-            name: data?.name,
-            description: data?.description,
-            variantName: data?.variantName,
-            variantDescription: data?.variantDescription,
+            name: data?.name || "",
+            description: data?.description || "",
+            variantName: data?.variantName || "",
+            variantDescription: data?.variantDescription || "",
             images: data?.images ? data.images : [],
             variantImage: data?.variantImage ? [{ url: data.variantImage }] : [],
-            categoryId: data?.categoryId,
-            subCategoryId: data?.subCategoryId,
-            brand: data?.brand,
-            sku: data?.sku,
+            categoryId: data?.categoryId || "",
+            subCategoryId: data?.subCategoryId || "",
+            brand: data?.brand || "",
+            sku: data?.sku || "",
             colors: data?.colors || [{ color: "" }],
             sizes: data?.sizes,
-            keywords: data?.keywords,
-            isSale: data?.isSale,
+            keywords: data?.keywords || [],
+            isSale: data?.isSale || false,
             saleEndDate: data?.saleEndDate || format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
-            product_specs: data?.product_specs,
-            variant_specs: data?.variant_specs,
-            questions: data?.questions,
-            offerTagId: data?.offerTagId,
+            product_specs: data?.product_specs || [{name: "", value: ""}],
+            variant_specs: data?.variant_specs || [],
+            questions: data?.questions || [],
+            offerTagId: data?.offerTagId || "",
         },
     });
 
@@ -205,8 +208,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({
         form.setValue("sizes", sizes);
         form.setValue("keywords", keywords);
         form.setValue("product_specs", productSpecs);
-        form.setValue("variant_specs", productSpecs);
-    }, [colors, sizes, keywords, productSpecs, variantSpecs, data]);
+        form.setValue("variant_specs", variantSpecs);
+        form.setValue("questions", questions);
+    }, [colors, sizes, keywords, productSpecs, variantSpecs, data, questions]);
 
     return <AlertDialog>
         <Card className="w-full" >
@@ -227,7 +231,81 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                         {/* Images - colors */}
                         <div className="flex flex-col gap-y-6 xl:flex-row">
                             {/* Images */}
-                            <FormField
+                            <div className="">
+                                <FormField        
+                                    control={form.control}
+                                    name="images"
+                                    render={({ field })=>(
+                                        <FormItem>
+                                            <FormControl className="bg-red" >
+                                                <div>
+                                                    <ImagesPreviewGrid
+                                                        images={form.watch("images") ?? []}
+                                                        onRemove={(url) => {
+                                                            const current = form.getValues("images") ?? [];
+                                                            const updated = current.filter((img) => img.url !== url);
+
+                                                            form.setValue("images", updated, {
+                                                                shouldDirty: true,
+                                                                shouldTouch: true,
+                                                                shouldValidate: true,
+                                                            });
+                                                        }}
+                                                        colors={colors}
+                                                        setColors={setColors}
+                                                    />
+                                                    <FormMessage className="mt-4" />
+                                                    <ImageUpload
+                                                        dontShowPreview
+                                                        type="standard"
+                                                        value={(form.getValues("images") ?? []).map((img) => img.url)}
+                                                        disabled={isLoading}
+                                                        onChange={(url) => {
+                                                            const current = form.getValues("images") ?? [];
+                                                            const updated = [...current, { url }];
+
+                                                            form.setValue("images", updated, {
+                                                                shouldDirty: true,
+                                                                shouldTouch: true,
+                                                                shouldValidate: true,
+                                                            });
+                                                        }}
+                                                        onRemove={(url) => {
+                                                            const current = form.getValues("images") ?? [];
+                                                            const updated = current.filter((img) => img.url !== url);
+
+                                                            form.setValue("images", updated, {
+                                                                shouldDirty: true,
+                                                                shouldTouch: true,
+                                                                shouldValidate: true,
+                                                            });
+                                                        }}
+                                                    />
+                                                </div>
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            
+                            {/* Colors */}
+                            <div className="w-full flex flex-col gap-y-3 xl:pl-5">
+                                <ClickToAddInputs
+                                    details={data?.colors || colors}
+                                    // @ts-ignore
+                                    setDetails={setColors}
+                                    initialDetail={{ color: "" }}
+                                    header="Colors"
+                                    colorPicker
+                                />
+                                {errors.colors && (
+                                    <span className="text-sm font-medium text-destructive">
+                                        {errors.colors.message}
+                                    </span>
+                                )}
+                            </div>
+                            {/* Images */}
+                            {/* <FormField
                                 control={form.control}
                                 name="images"
                                 render={({ field })=>(
@@ -271,9 +349,10 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                         </FormControl>
                                     </FormItem>
                                 )}
-                            />
+                            />*/}
+
                             {/* Colors */}
-                            <div className="w-full flex flex-col gap-y-3 xl:pl-5">
+                            {/* <div className="w-full flex flex-col gap-y-3 xl:pl-5">
                                 <ClickToAddInputs
                                     details={data?.colors || colors}
                                     // @ts-ignore
@@ -287,7 +366,7 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                         {errors.colors.message}
                                     </span>
                                 )}
-                            </div>
+                            </div> */}
                         </div>
                         {/* Name - variant name */}
                         <div className="flex flex-col lg:flex-row gap-4">
@@ -330,13 +409,19 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                     name="description"
                                     render={({ field })=><FormItem className="flex-1">
                                         <FormControl>
-                                            <JoditEditor
+                                            <JoditField
+                                                value={form.getValues().description || ""}
+                                                onBlur={(content) => {
+                                                    form.setValue("description", content);
+                                                }}
+                                            />
+                                            {/* <JoditEditor
                                                 ref={productDescEditor}
                                                 value={form.getValues().description}
                                                 onChange={(content) => {
                                                     form.setValue("description", content);
                                                 }}
-                                            />
+                                            /> */}
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>}
@@ -349,26 +434,26 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                     name="variantDescription"
                                     render={({ field })=><FormItem className="flex-1">
                                         <FormControl>
-                                            <JoditEditor
+                                            <JoditField
+                                                value={form.getValues().variantDescription || ""}
+                                                onBlur={(content) => {
+                                                    form.setValue("variantDescription", content);
+                                                }}
+                                            />
+                                            {/* <JoditEditor
                                                 ref={variantDescEditor}
                                                 value={form.getValues().variantDescription || ""}
                                                 onChange={(content) => {
                                                     form.setValue("variantDescription", content);
                                                 }}
-                                            />
+                                            /> */}
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>}
                                 />
                             </TabsContent>
                         </Tabs>
-                
-                        {/* <div className="flex flex-col lg:flex-row gap-4 hidden"> */}
-                            {/* Description */}
-                            
-                            {/* VariantDescription */}                            
-                        {/* </div> */}
-                        
+
                         {/* Category - subCategory - offerTags */}
                         <div className="flex gap-4">
                             <FormField 
@@ -720,7 +805,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                 )
                             }
                         </div>
-                
+                        <pre className="text-xs text-red-500 bg-black/30 p-2 rounded">
+                            {JSON.stringify(form.formState.errors, null, 2)}
+                        </pre>
                         <Button type="submit" disabled={isLoading} className="cursor-pointer" >
                             {
                                 isLoading ? "loading..."

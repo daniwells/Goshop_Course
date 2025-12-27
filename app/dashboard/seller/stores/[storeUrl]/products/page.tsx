@@ -23,7 +23,6 @@ export default async function SellerProductsPage({
   const resolvedParams = await params;
   const categories = await getAllCategories();
   const offerTags = await getAllOfferTags();
-
   const products = await getAllStoreProducts(resolvedParams.storeUrl);
 
   return <DataTable
@@ -37,9 +36,10 @@ export default async function SellerProductsPage({
       <ProductDetails 
         offerTags={offerTags}
         categories={categories}
-        storeUrl={resolvedParams.storeUrl}/>
-      }
-    newTabLink={`dashboard/seller/stores/${resolvedParams.storeUrl}/products/new`}
+        storeUrl={resolvedParams.storeUrl}
+      />
+    }
+    newTabLink={`/dashboard/seller/stores/${resolvedParams.storeUrl}/products/new`}
     filterValue="name"
     data={products}
     columns={columns}

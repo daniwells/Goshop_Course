@@ -3,8 +3,8 @@ import MessageIcon from "./message";
 import WishlistIcon from "./wishlist";
 import CartIcon from "./cart";
 import AppIcon from "./app";
-// import UserIcon from "./user";
-// import SendIcon from "./send";
+import UserIcon from "./user";
+import SendIcon from "./send";
 // import CopyIcon from "./copy";
 // import ArrowIcon from "./arrow";
 // import AppealIcon from "./appeal";
@@ -17,8 +17,8 @@ export {
   WishlistIcon,
   CartIcon,
   AppIcon,
-//   UserIcon,
-//   SendIcon,
+  UserIcon,
+  SendIcon,
 //   CopyIcon,
 //   ArrowIcon,
 //   AppealIcon,

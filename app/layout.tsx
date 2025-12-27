@@ -44,7 +44,10 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ModalProvider>
-              {children}
+              <div className="light">
+
+                {children}
+              </div>
             </ModalProvider>
             <Toaster richColors/>
           </ThemeProvider>

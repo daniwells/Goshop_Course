@@ -94,7 +94,7 @@ model Store {
   userId String
   user   User   @relation("UserStores", fields: [userId], references: [id])
 
-  products Product[] @relation("StoreToProduct")
+  products      Product[]      @relation("StoreToProduct")
   shippingRates ShippingRate[] @relation("StoreShippingRates")
 
   @@index([userId])
@@ -107,6 +107,7 @@ model Product {
   slug        String
   brand       String
   rating      Float  @default(0)
+  sales       Int    @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -142,6 +143,7 @@ model ProductVariant {
   saleEndDate        String?
   keywords           String
   sku                String
+  sales              Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -242,7 +244,7 @@ model OfferTag {
 }
 
 model Country {
-  id String @id @default(uuid())
+  id   String @id @default(uuid())
   name String @unique
   code String @unique
 
@@ -260,15 +262,15 @@ model ShippingRate {
   shippingFeeForAdditionalItem Float
   shippingFeePerKg             Float
   shippingFeeFixed             Float
-  deliveryTimeMin              Int 
+  deliveryTimeMin              Int
   deliveryTimeMax              Int
-  returnPolicy String
+  returnPolicy                 String
 
   countryId String
-  country Country @relation("CountryShippingRates", fields: [countryId], references: [id])
+  country   Country @relation("CountryShippingRates", fields: [countryId], references: [id])
 
   storeId String
-  store Store @relation("StoreShippingRates", fields: [storeId], references: [id])
+  store   Store  @relation("StoreShippingRates", fields: [storeId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -276,4 +278,3 @@ model ShippingRate {
   @@index([countryId])
   @@index([storeId])
 }
-

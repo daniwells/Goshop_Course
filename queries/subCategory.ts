@@ -122,3 +122,41 @@ export const deleteSubCategory = async (subCategoryId: string) => {
 
     return response;
 }
+
+// Function: getSubCategories
+// Description: Retrieves subcategories from the database, with options for limiting results and random selection.
+// Parameters:
+// - limit: Number indicating the maximum number of subcategories to retrieve.
+// - random: Boolean indicating whether to return random subcategories.
+// Returns: List of subcategories based on the provided options.
+export const getSubCategories = async (
+    limit: number | null,
+    random: boolean = false
+): Promise<SubCategory[]> => {
+    enum SortOrder {
+        asc = "asc",
+        desc = "desc",
+    }
+
+    try{
+        const queryOptions = {
+            take: limit || undefined,
+            orderBy: random ? { createdAt: SortOrder.desc } : undefined,
+        };
+
+        if(random) {
+            const subcategories = await db.$queryRaw<SubCategory[]>`
+                SELECT * FROM SubCategory
+                ORDER BY RAND()
+                LIMIT ${limit || 10}
+            `
+            return subcategories;
+        }else{
+            const subcategories = await db.subCategory.findMany(queryOptions);
+            return subcategories;
+        }
+    }catch(error){
+        console.error("Error fetching subcategories:", error);
+        throw error;
+    }
+}

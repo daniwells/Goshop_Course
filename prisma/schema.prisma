@@ -149,7 +149,7 @@ model ProductVariant {
   updatedAt DateTime @default(now()) @updatedAt
 
   productId String
-  product   Product @relation("ProductToProductVariant", fields: [productId], references: [id])
+  product   Product @relation("ProductToProductVariant", fields: [productId], references: [id], onDelete: Cascade)
 
   specs  Spec[]                @relation("ProductVariantSpec")
   sizes  Size[]                @relation("ProductVariantToSize")
@@ -170,7 +170,7 @@ model Size {
   updatedAt DateTime @default(now()) @updatedAt
 
   productVariantId String
-  productVariant   ProductVariant @relation("ProductVariantToSize", fields: [productVariantId], references: [id])
+  productVariant   ProductVariant @relation("ProductVariantToSize", fields: [productVariantId], references: [id], onDelete: Cascade)
 
   @@index([productVariantId])
 }
@@ -184,7 +184,7 @@ model ProductVariantImage {
   updatedAt DateTime @default(now()) @updatedAt
 
   productVariantId String
-  productVariant   ProductVariant @relation("ProductVariantToVariantImage", fields: [productVariantId], references: [id])
+  productVariant   ProductVariant @relation("ProductVariantToVariantImage", fields: [productVariantId], references: [id], onDelete: Cascade)
 
   @@index([productVariantId])
 }
@@ -197,7 +197,7 @@ model Color {
   updatedAt DateTime @default(now()) @updatedAt
 
   productVariantId String
-  productVariant   ProductVariant @relation("ProductVariantToColor", fields: [productVariantId], references: [id])
+  productVariant   ProductVariant @relation("ProductVariantToColor", fields: [productVariantId], references: [id], onDelete: Cascade)
 }
 
 model Spec {

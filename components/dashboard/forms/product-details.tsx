@@ -72,6 +72,10 @@ const ProductDetails: FC<ProductDetailsProps> = ({
 }) => {
     const router = useRouter();
 
+    if(data){
+        console.log(data)
+    }
+
     const productDescEditor = useRef(null);
     const variantDescEditor = useRef(null);
 

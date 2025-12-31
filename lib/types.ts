@@ -1,10 +1,11 @@
 import { getAllSubCategories } from "@/queries/subCategory";
-import { getAllStoreProducts } from "@/queries/product";
+import { getAllStoreProducts, getShippingDetails } from "@/queries/product";
 import { getStoreDefaultShippingDetails } from "@/queries/store";
-import { ShippingRate } from "./generated/prisma/client";
+import { FreeShipping, FreeShippingCountry, ShippingRate } from "./generated/prisma/client";
 import countries from "@/data/countries.json";
 import { getProducts } from "@/queries/product";
 import { ProductVariantImage, Size } from "./generated/prisma/client";
+import { retrieveProductDetails, formatProductResponse } from "@/queries/product";
 
 export interface DashboardSidebarMenuInterface {
     label: string;
@@ -42,6 +43,7 @@ export type ProductWithVariantType = {
   variant_specs: { name: string; value: string }[];
   questions: {question: string, answer: string}[];
   offerTagId: string;
+  weight: number;
 };
 
 export type StoreProductType = Awaited<
@@ -82,4 +84,20 @@ export type VariantSimplified = {
 export type VariantImageType = {
   url: string;
   image: string;
+}
+
+export type ProductPageType = Awaited<
+  ReturnType<typeof retrieveProductDetails>
+>;
+
+export type ProductPageDataType = Awaited<
+  ReturnType<typeof formatProductResponse>
+>;
+
+export type ProductShippingDetailsType = Awaited<
+  ReturnType<typeof getShippingDetails>
+>;
+
+export type FreeShippingWithCountriesType = FreeShipping & {
+  eligibaleCountries: FreeShippingCountry[];
 }

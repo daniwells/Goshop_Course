@@ -114,6 +114,7 @@ const ProductDetails: FC<ProductDetailsProps> = ({
             sizes: data?.sizes,
             keywords: data?.keywords || [],
             isSale: data?.isSale || false,
+            weight: data?.weight || 1,
             saleEndDate: data?.saleEndDate || format(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
             product_specs: data?.product_specs || [{name: "", value: ""}],
             variant_specs: data?.variant_specs || [],
@@ -160,6 +161,7 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                     saleEndDate: values.saleEndDate,
                     brand: values.brand,
                     sku: values.sku,
+                    weight: values.weight,
                     colors: values.colors,
                     sizes: values.sizes,
                     keywords: values.keywords,
@@ -308,70 +310,8 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                                     </span>
                                 )}
                             </div>
-                            {/* Images */}
-                            {/* <FormField
-                                control={form.control}
-                                name="images"
-                                render={({ field })=>(
-                                    <FormItem>
-                                        <FormControl className="bg-red" >
-                                            <div>
-                                                <ImagesPreviewGrid
-                                                    images={form.getValues().images}
-                                                    onRemove={(url) => {
-                                                        const updatedImages = images.filter(
-                                                            (img) => img.url !== url
-                                                        );
-                                                        setImages(updatedImages);
-                                                        field.onChange(updatedImages);
-                                                    }}
-                                                    colors={colors}
-                                                    setColors={setColors}
-                                                />
-                                                <FormMessage className="!mt-4" />
-                                                <ImageUpload
-                                                    dontShowPreview
-                                                    type="standard"
-                                                    value={field.value.map((image) => image.url)}
-                                                    disabled={isLoading}
-                                                    onChange={(url) => {
-                                                    setImages((prevImages) => {
-                                                            const updatedImages = [...prevImages, { url }];
-                                                            field.onChange(updatedImages);
-                                                            return updatedImages;
-                                                        });
-                                                    }}
-                                                    onRemove={(url) =>
-                                                        field.onChange([
-                                                            ...field.value.filter(
-                                                            (current) => current.url !== url
-                                                            ),
-                                                        ])
-                                                    }
-                                                />
-                                            </div>
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />*/}
-
-                            {/* Colors */}
-                            {/* <div className="w-full flex flex-col gap-y-3 xl:pl-5">
-                                <ClickToAddInputs
-                                    details={data?.colors || colors}
-                                    // @ts-ignore
-                                    setDetails={setColors}
-                                    initialDetail={{ color: "" }}
-                                    header="Colors"
-                                    colorPicker
-                                />
-                                {errors.colors && (
-                                    <span className="text-sm font-medium text-destructive">
-                                        {errors.colors.message}
-                                    </span>
-                                )}
-                            </div> */}
                         </div>
+
                         {/* Name - variant name */}
                         <div className="flex flex-col lg:flex-row gap-4">
                             <FormField 
@@ -570,9 +510,9 @@ const ProductDetails: FC<ProductDetailsProps> = ({
                             />
                         </div>
 
-                        {/* Brand, Sku */}
+                        {/* Brand, Sku, Weight */}
                         <div className="flex flex-col lg:flex-row gap-4">
-                                <FormField
+                            <FormField
                                 disabled={isLoading}
                                 control={form.control}
                                 name="brand"

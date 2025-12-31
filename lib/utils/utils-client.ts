@@ -49,3 +49,29 @@ export const getDominantColors = (imgUrl: string): Promise<string[]> => {
     };
   });
 }
+
+/*
+  * Function: getShippingDatesRange
+  * Description: Returns the shipping date range by adding the specified min and max days.
+  * Parameters:
+  *   - minDays: Minimum number of days to add to the current date.
+  *   - maxDays: Maximum number of days to add to the current date.
+  * Returns: Object containing minDate and maxDate.
+*/
+export const getShippingDatesRange = (
+  minDays: number,
+  maxDays: number
+): {minDate: string, maxDate: string} => {
+  const currentDate = new Date();
+
+  const minDate = new Date(currentDate);
+  minDate.setDate(currentDate.getDate() + minDays);
+
+  const maxDate = new Date(currentDate);
+  maxDate.setDate(currentDate.getDate() + maxDays);
+
+  return {
+    minDate: minDate.toDateString(),
+    maxDate: minDate.toDateString(),
+  }
+}

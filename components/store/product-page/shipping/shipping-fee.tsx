@@ -18,7 +18,7 @@ const ProductShippingFee: React.FC<Props> = ({
     switch(method){
         case "ITEM":
             return <div className="w-full pb-1">
-                <div className="w-full" >
+                <div className="w-full ml-5">
                     <span className="text-xs flex gap-x-1">
                         <Check className="min-w-3 max-w-3 stroke-green-400"/>
                         <span className="mt-1">
@@ -154,7 +154,7 @@ const ProductShippingFee: React.FC<Props> = ({
             break;
         case "FIXED":
             return <div className="w-full pb-1">
-                <div className="w-full" >
+                <div className="w-full ml-2">
                     <span className="text-xs flex gap-x-1">
                         <Check className="min-w-3 max-w-3 stroke-green-400"/>
                         <span className="mt-1">

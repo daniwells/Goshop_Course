@@ -6,7 +6,7 @@ import { FC } from "react"
 import Image from "next/image";
 
 // Types
-import { ProductPageDataType } from "@/lib/types";
+import { CartProductType, ProductPageDataType } from "@/lib/types";
 
 // Icons
 import { CopyIcon } from "../../icons";
@@ -28,9 +28,11 @@ interface Props {
     productData: ProductPageDataType;
     quantity?: number;
     sizeId: string | undefined;
+    handleChange: (property: keyof CartProductType, value: any) => void;
+
 }
 
-const ProductInfo: FC<Props> = ({productData, quantity, sizeId}) => {
+const ProductInfo: FC<Props> = ({productData, quantity, sizeId, handleChange}) => {
     if(!productData) return null;
 
     const { 
@@ -114,7 +116,7 @@ const ProductInfo: FC<Props> = ({productData, quantity, sizeId}) => {
             </div>
         </div>
         <div className="my-2 relative flex flex-col sm:flex-row justify-between">
-            <ProductPrice sizeId={sizeId} sizes={sizes}/>
+            <ProductPrice sizeId={sizeId} sizes={sizes} handleChange={handleChange} />
             {
                 isSale && saleEndDate && (
                     <div className="mt-4 pb-2">
@@ -150,6 +152,7 @@ const ProductInfo: FC<Props> = ({productData, quantity, sizeId}) => {
             <SizeSelector 
                 sizes={sizes}
                 sizeId={sizeId}
+                handleChange={handleChange}
             />
         </div>
         <div>

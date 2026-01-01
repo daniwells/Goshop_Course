@@ -261,6 +261,32 @@ export const getProducts = async (
 
     const whereClause: any = {
         AND: [],
+    };
+
+    if(filters.category){
+        const category = await db.category.findUnique({
+            where: {
+                url: filters.category,
+            },
+            select: { id:true },
+        });
+
+        if(category){
+            whereClause.AND.push({ categoryId: category.id });
+        }
+    }
+
+    if(filters.subCategory){
+        const subCategory = await db.subCategory.findUnique({
+            where: {
+                url: filters.subCategory,
+            },
+            select: { id:true },
+        });
+
+        if(subCategory){
+            whereClause.AND.push({ subCategoryId: subCategory.id });
+        }
     }
 
     const products = await db.product.findMany({
@@ -475,6 +501,7 @@ export const formatProductResponse = async (
         },
         shippingDetails,
         reletadProducts: [],
+        variantImage: variant.variantImage,
         variantImages: product.variantImages,
     }
 }

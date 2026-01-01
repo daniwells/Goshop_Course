@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/utils-client";
+import { CartProductType } from "@/lib/types";
+import { useEffect } from "react";
 
 interface SimplifiedSize {
     id: string;
@@ -14,9 +16,10 @@ interface Props {
     sizeId?: string | undefined;
     sizes: SimplifiedSize[];
     isCard?: boolean;
+    handleChange: (property: keyof CartProductType, value: any) => void;
 }
 
-const ProductPrice: React.FC<Props> = ({ sizeId, sizes, isCard }) => {
+const ProductPrice: React.FC<Props> = ({ sizeId, sizes, isCard, handleChange }) => {
     if(!sizes || sizes.length === 0){
         return;
     }
@@ -65,6 +68,12 @@ const ProductPrice: React.FC<Props> = ({ sizeId, sizes, isCard }) => {
     if(!selectedSize) return <></>;
 
     const discountedPrice = selectedSize.price * (1-selectedSize.discount / 100);
+
+    useEffect(() => {
+        handleChange("price", discountedPrice);
+        handleChange("stock", selectedSize.quantity);
+        
+    }, [sizeId]);
 
     return <div>
         <div className="text-orange-primary inline-block font-bold leading-none mr-2.5">

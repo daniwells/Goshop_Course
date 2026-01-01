@@ -3,6 +3,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import ColorThief from "colorthief";
+import { CartProductType } from "../types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -75,3 +76,52 @@ export const getShippingDatesRange = (
     maxDate: minDate.toDateString(),
   }
 }
+
+export const isProductValidToAdd = (product: CartProductType): boolean => {
+  const {
+    productId,
+    variantId,
+    productSlug,
+    variantSlug,
+    name,
+    variantName,
+    image,
+    quantity,
+    price,
+    sizeId,
+    size,
+    stock,
+    shippingFee,
+    extraShippingFee,
+    shippingMethod,
+    shippingService,
+    variantImage,
+    weight,
+    deliveryTimeMin,
+    deliveryTimeMax,
+  } = product;
+
+  if (
+    !productId ||
+    !variantId ||
+    !productSlug ||
+    !variantSlug ||
+    !name ||
+    !variantName ||
+    !image ||
+    quantity <= 0 ||
+    price <= 0 ||
+    !sizeId ||
+    !size ||
+    stock <= 0 ||
+    weight <= 0 ||
+    !shippingMethod ||
+    !variantImage ||
+    deliveryTimeMin < 0 ||
+    deliveryTimeMax < deliveryTimeMin
+  ) {
+    return false;
+  }
+
+  return true;
+};

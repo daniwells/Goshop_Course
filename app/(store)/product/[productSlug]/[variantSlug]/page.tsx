@@ -1,6 +1,7 @@
 import { ProductPageContainer } from "@/components/store/product-page/container";
+import RelatedProducts from "@/components/store/product-page/related-product";
 import { Separator } from "@/components/ui/separator";
-import { getProductPageData } from "@/queries/product";
+import { getProductPageData, getProducts } from "@/queries/product";
 import { notFound, redirect } from "next/navigation";
 
 interface PageProps {
@@ -34,20 +35,24 @@ export default async function ProductVariantPage({
     }else if(!sizeId && sizes.length === 1){
         return redirect(`/product/${resolvedParams.productSlug}/${resolvedParams.variantSlug}?sizeId=${sizes[0].id}`)
     }
-    
-    const relatedProducts = {
-        products: [],
-    };
 
-    const { specs, questions } = productData;
+    const { specs, questions, shippingDetails, category, subCategory } = productData;
+    
+    const relatedProducts = await getProducts({
+        subCategory: subCategory.url
+    }, "", 1, 12);
 
     return <div>
         <div className="max-w-[1960px] mx-auto p-4 overflow-x-hidden" >
             <ProductPageContainer productData={productData} sizeId={sizeId} >
                 <div>
                     {
-                        relatedProducts.products && <>
+                        relatedProducts.products && 
+                        <>
                             <Separator/>
+                            <RelatedProducts
+                                products={relatedProducts.products}
+                            />
                         </>
                     }
                     <Separator className="mt-6" />

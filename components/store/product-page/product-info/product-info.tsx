@@ -2,11 +2,12 @@
 
 // React, Next.js
 import Link from "next/link";
-import { FC } from "react"
+import { Dispatch, FC, SetStateAction } from "react"
 import Image from "next/image";
 
 // Types
 import { CartProductType, ProductPageDataType } from "@/lib/types";
+import { ProductVariantImage } from "@/lib/generated/prisma/client";
 
 // Icons
 import { CopyIcon } from "../../icons";
@@ -29,10 +30,18 @@ interface Props {
     quantity?: number;
     sizeId: string | undefined;
     handleChange: (property: keyof CartProductType, value: any) => void;
-
+    setVariantImages: Dispatch<SetStateAction<ProductVariantImage[]>>;
+    setActiveImage: Dispatch<SetStateAction<ProductVariantImage | null>>
 }
 
-const ProductInfo: FC<Props> = ({productData, quantity, sizeId, handleChange}) => {
+const ProductInfo: FC<Props> = ({
+    productData,
+    quantity,
+    sizeId,
+    handleChange,
+    setVariantImages,
+    setActiveImage
+}) => {
     if(!productData) return null;
 
     const { 
@@ -40,15 +49,17 @@ const ProductInfo: FC<Props> = ({productData, quantity, sizeId, handleChange}) =
         name,
         sku,
         colors,
-        variantImages,
+        variantsInfo,
         sizes,
         isSale,
         saleEndDate,
         variantName,
         store,
         rating,
-        numReviews 
+        reviewsStatistics 
     } = productData;
+
+    const { totalReviews } = reviewsStatistics;
 
     const copySkuToClipboard = async () => {
         try {
@@ -104,13 +115,13 @@ const ProductInfo: FC<Props> = ({productData, quantity, sizeId, handleChange}) =
                     className="text-[#ffd804] hover:underline"
                 >
                     {
-                        numReviews === 0 ? 
+                        totalReviews === 0 ? 
                             "No review yet" 
                         : 
-                            numReviews === 1 ?
+                            totalReviews === 1 ?
                                 "1 review" 
                             : 
-                                `${numReviews} reviews`
+                                `${totalReviews} reviews`
                     }
                 </Link>
             </div>
@@ -135,10 +146,12 @@ const ProductInfo: FC<Props> = ({productData, quantity, sizeId, handleChange}) =
             </div>
             <div className="mt-4" >
                 {
-                    variantImages.length > 0 &&
+                    variantsInfo.length > 0 &&
                         <ProductVariantSelector 
-                            variants={variantImages}
+                            variants={variantsInfo}
                             slug={productData.variantSlug}
+                            setVariantImages={setVariantImages}
+                            setActiveImage={setActiveImage}
                         />
                 }
             </div>

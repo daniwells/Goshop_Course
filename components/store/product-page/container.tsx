@@ -15,6 +15,7 @@ import ShippingDetails from "./shipping/shipping-details";
 import ReturnSecurityPrivacyCard from "./returns-security-privacy-card";
 import QuantitySelector from "./quantity-selector";
 import SocialShare from "../shared/social-share";
+import { ProductVariantImage } from "@/lib/generated/prisma/client";
 
 interface Props {
     productData: ProductPageDataType;
@@ -27,6 +28,12 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
     
     const { images, shippingDetails, sizes } = productData;
     if(typeof shippingDetails === "boolean") return null;
+
+    const [ variantImages, setVariantImages ] = useState<ProductVariantImage[]>(images);
+
+    const [ activeImage, setActiveImage ] = useState<ProductVariantImage | null>(
+        images[0]
+    );
 
     const data: CartProductType = {
         productId: productData.productId,
@@ -68,12 +75,18 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
 
     return <div className="relative">
         <div className="w-full xl:flex xl:gap-4">
-            <ProductSwiper images={images} />
+            <ProductSwiper 
+                images={variantImages.length > 0 ? variantImages : images}
+                activeImage={activeImage || images[0]}
+                setActiveImage={setActiveImage}
+            />
             <div className="w-full mt-4 md:mt-0 flex flex-col gap-4 md:flex-row">
                 <ProductInfo 
                     productData={productData}
                     sizeId={sizeId}
                     handleChange={handleChange}
+                    setVariantImages={setVariantImages}
+                    setActiveImage={setActiveImage}
                 />
                 <div className="w-[390px]">
                     <div className="z-20">

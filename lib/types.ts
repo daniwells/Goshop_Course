@@ -1,11 +1,12 @@
 import { getAllSubCategories } from "@/queries/subCategory";
-import { getAllStoreProducts, getShippingDetails } from "@/queries/product";
+import { getAllStoreProducts, getRatingStatistics, getShippingDetails } from "@/queries/product";
 import { getStoreDefaultShippingDetails } from "@/queries/store";
-import { FreeShipping, FreeShippingCountry, ShippingRate } from "./generated/prisma/client";
+import { Color, FreeShipping, FreeShippingCountry, Review, ReviewImage, ShippingRate } from "./generated/prisma/client";
 import countries from "@/data/countries.json";
 import { getProducts } from "@/queries/product";
 import { ProductVariantImage, Size } from "./generated/prisma/client";
 import { retrieveProductDetails, formatProductResponse } from "@/queries/product";
+import { User } from "./generated/prisma/client";
 
 export interface DashboardSidebarMenuInterface {
     label: string;
@@ -98,6 +99,14 @@ export type ProductShippingDetailsType = Awaited<
   ReturnType<typeof getShippingDetails>
 >;
 
+export type RatingStatisticsType = Awaited<
+  ReturnType<typeof getRatingStatistics>
+>;
+
+export type StatisticsCardType = Awaited<
+  ReturnType<typeof getRatingStatistics>
+>["ratingStatistics"];
+
 export type FreeShippingWithCountriesType = FreeShipping & {
   eligibaleCountries: FreeShippingCountry[];
 }
@@ -125,3 +134,40 @@ export type CartProductType = {
   deliveryTimeMax: number;
   isFreeShipping: boolean;
 };
+
+export type ReviewWithImageType = Review & {
+  images: ReviewImage[];
+  user: User;
+}
+
+export type SortOrder = "asc" | "desc";
+
+export type ReviewsFiltersType = {
+  rating?: number;
+  hasImages?: boolean;
+}
+
+export type ReviewsOrderType = {
+  orderBy: "latest" | "oldest" | "highest";
+}
+
+export type VariantInfoType = {
+  variantName: string;
+  variantSlug: string;
+  variantImage: string;
+  variantUrl: string;
+  images: ProductVariantImage[];
+  sizes: Size[];
+  colors: Partial<Color>[];
+};
+
+export type ReviewDetailsType = {
+  id: string;
+  review: string;
+  rating: number;
+  images: { url: string }[];
+  size: string;
+  quantity: string;
+  variant: string;
+  color: string;
+}

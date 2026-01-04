@@ -5,6 +5,10 @@ import Image from "next/image";
 import { useState } from "react";
 import { Check, MessageSquareMore, Plus } from "lucide-react";
 import { cn } from "@/lib/utils/utils-client";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { followStore } from "@/queries/user";
 
 interface Props {
     store: {
@@ -28,6 +32,28 @@ const StoreCard: React.FC<Props> = ({store}) => {
     } = store;
 
     const [ following, setFollowing ] = useState<boolean>(isUserfollowingStore);
+    const [ storeFollowersCount, setStoreFollowersCount ] = useState<number>(followersCount);
+    const user = useUser();
+    const router = useRouter();
+    const handleStoreFollow = async () => {
+        if(user.isSignedIn) router.push('/sign-in');
+        try {
+            const res = await followStore(id);
+            setFollowing(res);
+            
+            if(res){
+                setStoreFollowersCount((prev) => prev+1);
+                toast.success(`You are now following ${name}`);
+            } 
+            if(!res){
+                setStoreFollowersCount((prev) => prev-1);
+                toast.success(`You unfollowed ${name}`);
+            }
+
+        } catch (error) {
+            toast.error("Something happend, Try again later!")
+        }
+    }     
 
     return <div className="w-full" >
         <div className="bg-[#f5f5f5] flex items-center justify-between rounded-xl py-3 px-4">
@@ -49,15 +75,9 @@ const StoreCard: React.FC<Props> = ({store}) => {
                     </div>
                     <div className="text-sm leading-5 mt-1">
                         <strong>100%</strong>
-                        <span>Positive Feedback</span>&nbsp; &nbsp;
-                        {
-                            followersCount > 0 && (
-                                <>
-                                    <strong>{followersCount}</strong>
-                                    <strong>Followers</strong>
-                                </>
-                            )
-                        }
+                        <span>Positive Feedback</span>&nbsp; &nbsp;            
+                        <strong>{storeFollowersCount}</strong>
+                        <strong>Followers</strong>
                     </div>
                 </div>
             </div>
@@ -65,8 +85,9 @@ const StoreCard: React.FC<Props> = ({store}) => {
                 <div className={
                     cn("flex items-center border border-black rounded-full cursor-pointer text-base font-bold h-9 mx-2 px-4 hover:bg-black hover:text-white", {
                         "bg-black text-white":following,
-                    })
-                }>
+                    })}
+                    onClick={handleStoreFollow}
+                >
                     {
                         following ? 
                             <Check className="w-4 me-1"/>

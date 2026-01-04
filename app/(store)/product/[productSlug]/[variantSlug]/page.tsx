@@ -4,6 +4,8 @@ import ProductDescription from "@/components/store/product-page/product-descript
 import ProductQuestions from "@/components/store/product-page/product-questions";
 import ProductSpecs from "@/components/store/product-page/product-specs";
 import RelatedProducts from "@/components/store/product-page/related-product";
+import ProductReviews from "@/components/store/product-page/reviews/product-reviews";
+import StoreProducts from "@/components/store/product-page/store-products";
 import { Separator } from "@/components/ui/separator";
 import { getProductPageData, getProducts } from "@/queries/product";
 import { notFound, redirect } from "next/navigation";
@@ -40,7 +42,15 @@ export default async function ProductVariantPage({
         return redirect(`/product/${resolvedParams.productSlug}/${resolvedParams.variantSlug}?sizeId=${sizes[0].id}`)
     }
 
-    const { specs, questions, shippingDetails, category, subCategory } = productData;
+    const { 
+        specs,
+        questions,
+        subCategory,
+        store,
+        reviewsStatistics,
+        reviews,
+        variantsInfo
+    } = productData;
     
     const relatedProducts = await getProducts({
         subCategory: subCategory.url
@@ -60,6 +70,13 @@ export default async function ProductVariantPage({
                         </>
                     }
                     <Separator className="mt-6" />
+                    <ProductReviews
+                        productId = {productData.productId}
+                        rating={productData.rating}
+                        statistics={reviewsStatistics}
+                        reviews={reviews}
+                        variantsInfo={variantsInfo}
+                    />
                     <>
                         <Separator className="mt-6" />
                         <ProductDescription
@@ -82,6 +99,11 @@ export default async function ProductVariantPage({
                 }
                 <Separator className="mt-6"/>
                 <StoreCard store={productData.store} />
+                <StoreProducts
+                    storeUrl={store.url}
+                    storeName={store.name}
+                    count={5}
+                />
             </ProductPageContainer>
         </div>
     </div>

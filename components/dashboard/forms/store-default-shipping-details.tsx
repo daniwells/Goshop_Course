@@ -83,7 +83,6 @@ const StoreDefaultShippingDetails: FC<StoreDefaultShippingDetailsProps> = ({ dat
             
             router.refresh();
         } catch (error) {
-            console.log(error);
             toast.error("Oops!", {
                 description: error?.toString(),
             });

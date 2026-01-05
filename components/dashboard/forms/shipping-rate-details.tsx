@@ -91,7 +91,6 @@ const ShippingRateDetails: FC<ShippingRateDetailsProps> = ({ data, storeUrl }) =
                 router.refresh();
             }
         } catch (error) {
-            console.log(error);
             toast.error("Oops!", {
                 description: error?.toString(),
             });

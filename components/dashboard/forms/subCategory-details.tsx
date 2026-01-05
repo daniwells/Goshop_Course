@@ -53,14 +53,6 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({ data, categories }) =
 
     const isLoading = form.formState.isSubmitting;
 
-    const formData = form.watch();
-    console.log("formData", )
-
-    const allValues = form.watch();
-    useEffect(() => {
-        console.log("Form atualizado:", allValues);
-    }, [allValues]);
-
     useEffect(() => {
         if(data){
             form.reset({
@@ -99,7 +91,6 @@ const SubCategoryDetails: FC<SubCategoryDetailsProps> = ({ data, categories }) =
                 router.push("/dashboard/admin/subCategories");
             }
         } catch (error) {
-            console.log(error);
             toast.error("Oops!", {
                 description: error?.toString(),
             });

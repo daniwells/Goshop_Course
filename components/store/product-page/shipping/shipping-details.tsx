@@ -108,7 +108,7 @@ const ShippingDetails: React.FC<Props> = ({
             >   
                 <div className="w-full flex items-center justify-between gap-x-1 px-2">
                     <span className="text-xs" >
-                        { toggle ? "Hide" : "" }
+                        { toggle ? "Hide" : "Shipping Fee Breakdown" }
                     </span>
                     {
                         toggle ? 

@@ -1,7 +1,14 @@
 "use client"
 
 import { StatisticsCardType } from "@/lib/types";
-import ReactStars from "react-rating-stars-component";
+// import ReactStars from "react-rating-stars-component";
+
+import dynamic from "next/dynamic";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+
+const ReactStars = dynamic(() => import("react-rating-stars-component"), {
+  ssr: false,
+});
 
 export default function RatingStatisticsCard({ statistics }: { statistics: StatisticsCardType }) {
 
@@ -15,8 +22,12 @@ export default function RatingStatisticsCard({ statistics }: { statistics: Stati
                             value={rating.rating}
                             size={15}
                             color="#e2dfdf"
+                            activeColor="#f5b301"
                             isHalf
                             edit={false}
+                            emptyIcon={<FaRegStar />}
+                            halfIcon={<FaStarHalfAlt />}
+                            filledIcon={<FaStar />}
                         />
                         <div className="relative w-full flex-1 h-1.5 mx-2.5 bg-[#e2dfdf]">
                             <div 

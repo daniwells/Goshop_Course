@@ -1,4 +1,4 @@
-"use clinet";
+"use client";
 
 // React, Next.js
 import React, { useEffect, useState } from "react";
@@ -26,7 +26,7 @@ interface Props {
 export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, children }) => {
     if(!productData) return null;
     
-    const { images, shippingDetails, sizes } = productData;
+    const { productId, variantId, variantSlug, images, shippingDetails, sizes } = productData;
     if(typeof shippingDetails === "boolean") return null;
 
     const [ variantImages, setVariantImages ] = useState<ProductVariantImage[]>(images);
@@ -35,6 +35,10 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
         images[0]
     );
 
+    // console.log(productData)
+    // console.log(productData.images)
+    // console.log(productData.images[0].url)
+    
     const data: CartProductType = {
         productId: productData.productId,
         variantId: productData.variantId,
@@ -44,10 +48,10 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
         variantName: productData.variantName,
         image: productData.images[0].url,
         variantImage: productData.variantImage,
-        sizeId: sizeId || "",
-        size: "string",
         quantity: 1,
         price: 0,
+        sizeId: sizeId || "",
+        size: "",
         stock: 1,
         weight: productData.weight || 0,
         shippingMethod: shippingDetails.shippingFeeMethod,
@@ -64,9 +68,10 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
 
     const handleChange = (property: keyof CartProductType, value: any) => {
         setProductToBeAddedToCart((prevProduct) => ({
-            ...prevProduct, [property]: value,
-        }))
-    }
+        ...prevProduct,
+        [property]: value,
+        }));
+    };
 
     useEffect(() => {
         const check = isProductValidToAdd(productToBeAddedToCart);
@@ -80,7 +85,7 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
                 activeImage={activeImage || images[0]}
                 setActiveImage={setActiveImage}
             />
-            <div className="w-full mt-4 md:mt-0 flex flex-col gap-4 md:flex-row">
+            <div className="w-full mt-4 md:mt-0 flex flex-col justify-between gap-4 md:flex-row">
                 <ProductInfo 
                     productData={productData}
                     sizeId={sizeId}
@@ -88,9 +93,9 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
                     setVariantImages={setVariantImages}
                     setActiveImage={setActiveImage}
                 />
-                <div className="w-[390px]">
+                <div className="w-[390px] min-w-[390px]">
                     <div className="z-20">
-                        <div className="bg-whie border rounded-md overflow-hidden overflow-y-auto p-4 pb-0">
+                        <div className="bg-white border rounded-md overflow-hidden overflow-y-auto p-4 pb-0">
                             {
                                 typeof shippingDetails !== "boolean" && 
                                     <>

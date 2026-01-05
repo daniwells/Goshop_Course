@@ -19,16 +19,8 @@ export async function updateVariantImage (){
                         variantImage: firstImage.url,
                     }
                 });
-                console.log(
-                    `Updated variant ${variant.id} with image ${firstImage.url}.`
-                )
             }
         }
-
-        console.log(
-            "All product variants have been updated with their first image."
-        )
-
     }catch (error) {
         console.log("Error updating variant images:", error);
     }

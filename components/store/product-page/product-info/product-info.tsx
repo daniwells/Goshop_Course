@@ -14,7 +14,13 @@ import { CopyIcon } from "../../icons";
 
 // Toast
 import toast from "react-hot-toast";
-import ReactStars from "react-rating-stars-component";
+
+import dynamic from "next/dynamic";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+
+const ReactStars = dynamic(() => import("react-rating-stars-component"), {
+  ssr: false,
+});
 
 // Components
 import ProductPrice from "./product-price";
@@ -71,7 +77,7 @@ const ProductInfo: FC<Props> = ({
         }
     }
 
-    return <div className="relative w-full xl:w-[540px]">
+    return <div className="relative w-full">
         <div>
             <h1 className="text-main-primary inline font-bold leading-5">
                 {name} - {variantName}
@@ -103,12 +109,15 @@ const ProductInfo: FC<Props> = ({
             <div className="ml-4 flex items-center gap-x-2 flex-1 whitespace-nowrap">
                 <ReactStars
                     count={5}
-                    size={24}
+                    size={20}
                     color="#F5F5F5"
                     activeColor="#FFD804"
                     value={rating}
                     isHalf
                     edit={false}
+                    emptyIcon={<FaRegStar />}
+                    halfIcon={<FaStarHalfAlt />}
+                    filledIcon={<FaStar />}
                 />
                 <Link 
                     href="#reviews"

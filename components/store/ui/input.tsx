@@ -16,7 +16,7 @@ const Input: React.FC<Props> = ({
     return <div className="w-full relative">
         <input 
             type={type}
-            className="w-full pr-6 pl-8 py-4 rounded-xl outline-none duration-200 ring-1 ring-transparent focus:ring-[#11BE86]"
+            className="bg-white w-full pr-6 pl-8 py-4 rounded-xl outline-none duration-200 ring-1 ring-transparent focus:ring-[#11BE86]"
             name={name}
             placeholder={placeholder}
             value={value}

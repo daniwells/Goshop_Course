@@ -72,30 +72,27 @@ const OfferTagDetails: FC<OfferTagDetailsProps> = ({ data }) => {
 
   const handleSubmit = async () => {
     const values = form.getValues();
-    console.log(values)
     try {
-        console.log(values)
-        const response = await upsertOfferTag({
-            id: data?.id ? data.id : v4(),
-            name: values.name,
-            url: values.url,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        });
+      const response = await upsertOfferTag({
+        id: data?.id ? data.id : v4(),
+        name: values.name,
+        url: values.url,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
 
-        toast.success(
-            data?.id
-                ? "Offer tag has been updated."
-                : `Congratulations! '${response?.name}' is now created.`
-        );
+      toast.success(
+        data?.id
+        ? "Offer tag has been updated."
+        : `Congratulations! '${response?.name}' is now created.`
+      );
 
-        if (data?.id) {
+      if (data?.id) {
         router.refresh();
-        } else {
+      } else {
         router.push("/dashboard/admin/offer-tags");
-        }
+      }
     } catch (error: any) {
-      console.log(error);
       toast.error("Oops!",{description: error.toString()});
     }
   };

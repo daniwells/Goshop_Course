@@ -13,10 +13,6 @@ interface Props {
 }
 
 const VariantSwitcher: FC<Props> = ({ images, variants, setVariant, selectedVariant }) => {
-    console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
-    console.log(images)
-    console.log(variants)
-    console.log("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
     return <div>
         {
             images.length > 1 && (

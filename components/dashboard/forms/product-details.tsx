@@ -72,10 +72,6 @@ const ProductDetails: FC<ProductDetailsProps> = ({
 }) => {
     const router = useRouter();
 
-    if(data){
-        console.log(data)
-    }
-
     const productDescEditor = useRef(null);
     const variantDescEditor = useRef(null);
 
@@ -186,7 +182,6 @@ const ProductDetails: FC<ProductDetailsProps> = ({
             }
             router.push(`/dashboard/seller/stores/${storeUrl}/products`);
         } catch (error) {
-            console.log(error);
             toast.error("Oops!", {
                 description: error?.toString(),
             });

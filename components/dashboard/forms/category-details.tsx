@@ -86,8 +86,7 @@ const CategoryDetails: FC<CategoryDetailsProps> = ({ data }) => {
             }else{
                 router.push("/dashboard/admin/categories");
             }
-        } catch (error) {
-            console.log(error);
+        } catch (error) {            
             toast.error("Oops!", {
                 description: error?.toString(),
             });

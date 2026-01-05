@@ -49,7 +49,7 @@ const Select: FC<Props> = ({
           )}
           <input
             className={cn(
-              "w-full pr-6 pl-8 py-4 rounded-xl outline-none duration-200",
+              "w-full pr-6 pl-8 py-4 rounded-xl outline-none duration-200 bg-white",
               {
                 "ring-1 ring-[transparent] focus:ring-[#11BE86]":
                   !activeVariant?.colors,
@@ -65,7 +65,7 @@ const Select: FC<Props> = ({
         </div>
       </div>
       {isOpen && (
-        <div className="absolute top-16 w-full left-0 rounded-xl border  p-4 bg-white shadow-lg">
+        <div className="absolute top-16 w-full left-0 rounded-xl border p-4 bg-white shadow-lg">
           <p className="font-semibold text-xs text-[#5D5D5F]">
             {subPlaceholder}
           </p>

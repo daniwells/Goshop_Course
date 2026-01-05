@@ -35,6 +35,7 @@ const ProductVariantSelector: React.FC<Props> = ({ variants, slug, setVariantIma
                             src={variant.variantImage}
                             alt={`product variant ${variant.variantUrl}`}
                             width={48}
+                            height={48}
                             className="rounded-full"
                         />
                     </div>

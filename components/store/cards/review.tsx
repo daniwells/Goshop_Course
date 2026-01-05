@@ -3,7 +3,12 @@
 import ColorWheel from "@/components/shared/color-wheel";
 import { ReviewWithImageType } from "@/lib/types";
 import Image from "next/image";
-import ReactStars from "react-rating-stars-component";
+import dynamic from "next/dynamic";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+
+const ReactStars = dynamic(() => import("react-rating-stars-component"), {
+  ssr: false,
+});
 
 export default function ReviewCard({review}: {review: ReviewWithImageType}) {
     const { images, user } = review;
@@ -32,12 +37,15 @@ export default function ReviewCard({review}: {review: ReviewWithImageType}) {
             <div className="space-y-2">
                 <ReactStars
                     count={5}
-                    size={24}
+                    size={20}
                     color="#f5f5f5"
                     activeColor="#ffd804"
                     value={review.rating}
                     isHalf
                     edit={false}
+                    emptyIcon={<FaRegStar />}
+                    halfIcon={<FaStarHalfAlt />}
+                    filledIcon={<FaStar />}
                 />
                 <div className="flex items-center gap-x-2">
                     <ColorWheel colors={colors} size={24}/>

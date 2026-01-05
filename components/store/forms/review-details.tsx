@@ -11,7 +11,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import ReactStars from "react-rating-stars-component";
+
+import dynamic from "next/dynamic";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+
+const ReactStars = dynamic(() => import("react-rating-stars-component"), {
+  ssr: false,
+});
+
 import { z } from "zod";
 import Select from "../ui/select";
 import Input from "../ui/input";
@@ -78,8 +85,7 @@ export default function ReviewDetails({
       }
       toast.success("Review Added Successfully");
     } catch (error: any) {
-      console.log(error);
-      toast.error(error.toString());
+        toast.error(error.toString());
     }
   };
 
@@ -104,8 +110,6 @@ export default function ReviewDetails({
       form.setValue("color", variant.colors.join(","));
     }
   }, [form.getValues().variantName]);
-
-  console.log("review data", form.watch());
 
   return (
     <div>
@@ -133,6 +137,9 @@ export default function ReviewDetails({
                             onChange={field.onChange}
                             isHalf
                             edit={true}
+                            emptyIcon={<FaRegStar />}
+                            halfIcon={<FaStarHalfAlt />}
+                            filledIcon={<FaStar />}
                           />
                           <span>
                             ( {form.getValues().rating.toFixed(1)} out of 5.0)
@@ -194,7 +201,7 @@ export default function ReviewDetails({
                             onChange={(value) => {
                               field.onChange(value.toString());
                             }}
-                            value={field.value ? field.value.toString() : ""} // Handle undefined gracefully
+                            value={field.value ? field.value.toString() : ""}
                           />
                         </FormControl>
                       </FormItem>
@@ -208,7 +215,7 @@ export default function ReviewDetails({
                     <FormItem>
                       <FormControl>
                         <textarea
-                          className="min-h-32 p-4 w-full rounded-xl focus:outline-none ring-1 ring-[transparent] focus:ring-[#11BE86]"
+                          className="bg-white min-h-32 p-4 w-full rounded-xl focus:outline-none ring-1 ring-[transparent] focus:ring-[#11BE86]"
                           placeholder="Write your review..."
                           value={field.value}
                           onChange={field.onChange}

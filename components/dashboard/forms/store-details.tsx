@@ -97,7 +97,6 @@ const StoreDetails: FC<StoreDetailsProps> = ({ data }) => {
                 router.push(`/dashboard/seller/stores/${response.url}`);
             }
         } catch (error) {
-            console.log(error);
             toast.error("Oops!", {
                 description: error?.toString(),
             });

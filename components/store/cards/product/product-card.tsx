@@ -3,7 +3,14 @@
 import { ProductType, VariantSimplified } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
-import ReactStars from "react-rating-stars-component";
+
+import dynamic from "next/dynamic";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+
+const ReactStars = dynamic(() => import("react-rating-stars-component"), {
+  ssr: false,
+});
+
 import ProductCardImageSwiper from "./swiper";
 import VariantSwitcher from "./variant-switcher";
 import { Button } from "../../ui/button";
@@ -37,12 +44,15 @@ export default function ProductCard({ product }: { product: ProductType }) {
                                     value={rating}
                                     isHalf
                                     edit={false}
+                                    emptyIcon={<FaRegStar />}
+                                    halfIcon={<FaStarHalfAlt />}
+                                    filledIcon={<FaStar />}
                                 />
                                 <div className="text-xs text-main-secondary">{sales} sold</div>
                             </div>
                         )
                     }
-                    <ProductPrice sizes={sizes} isCard/>
+                    <ProductPrice sizes={sizes} isCard handleChange={() => {}}/>
                 </Link>
             </div>
             <div className="hidden group-hover:block absolute -left-px bg-white border border-t-0 w-[calc(100%+2px)] px-4 pb-4 rounded-b-3xl shadow-xl z-30 space-y-2">

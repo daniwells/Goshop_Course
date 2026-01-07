@@ -61,17 +61,17 @@ export const columns: ColumnDef<StoreProductType>[] = [
                 {
                     row.original.variants.map((variant) => (
                         <div key={variant.id} className="flex flex-col gap-y-2 group-hover">
-                            <div className="relative cursor-pointer">
+                            <div className="relative cursor-pointer p-2">
                                 <Image
                                   src={variant.images[0].url}
                                   alt={`${variant.variantName} image`}
                                   height={1000}
                                   width={1000}
-                                  className="w-40 h-40 rounded-full object-cover shadow-2xl"
+                                  className="max-w-72 h-72 rounded-full object-cover shadow-sm"
                                 />
                                 <Link href={`/dashboard/seller/stores/${row.original.store.url}/products/${row.original.id}/variants/${variant.id}`}>
                                     <div 
-                                        className="w-full h-full absolute top-0 left-0 bottom-0 right-0 z-0 rounded-sm bg-black/50 transition-all duration-150 hidden group-hover:block"
+                                        className="w-[304px] h-full absolute top-0 left-0 bottom-0 right-0 z-0 rounded-sm bg-black/50 transition-all duration-150 hidden group-hover:block"
                                     >
                                         <FilePenLine className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white"/>
                                     </div>
@@ -131,6 +131,14 @@ export const columns: ColumnDef<StoreProductType>[] = [
       return (
         <span>{row.original.subCategory.name}</span>
       );
+    },
+  },
+  {
+    accessorKey: "offerTag",
+    header: "Offer",
+    cell: ({ row }) => {
+      const offerTag = row.original.offerTag;
+      return <span>{offerTag ? offerTag.name : "-"}</span>;
     },
   },
   {

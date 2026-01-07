@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { ShippingFeeMethod } from "./generated/prisma/enums";
 
 export const CategoryFormSchema = z.object({
     name: z
@@ -294,7 +295,7 @@ export const ProductFormSchema = z.object({
       "Each country must have a valid name and ID."
     )
     .default([]),
-//   shippingFeeMethod: z.nativeEnum(ShippingFeeMethod),
+  shippingFeeMethod: z.nativeEnum(ShippingFeeMethod),
 });
 
 export const OfferTagFormSchema = z.object({

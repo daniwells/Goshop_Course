@@ -110,15 +110,16 @@ enum ShippingFeeMethod {
 }
 
 model Product {
-  id                String            @id @default(uuid())
-  name              String
-  description       String            @db.LongText
-  slug              String            @unique
-  brand             String
-  rating            Float             @default(0)
-  sales             Int               @default(0)
-  numReviews        Int               @default(0)
-  shippingFeeMethod ShippingFeeMethod @default(ITEM)
+  id                          String            @id @default(uuid())
+  name                        String
+  description                 String            @db.LongText
+  slug                        String            @unique
+  brand                       String
+  rating                      Float             @default(0)
+  sales                       Int               @default(0)
+  numReviews                  Int               @default(0)
+  shippingFeeMethod           ShippingFeeMethod @default(ITEM)
+  freeShippingForAllCountries Boolean           @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

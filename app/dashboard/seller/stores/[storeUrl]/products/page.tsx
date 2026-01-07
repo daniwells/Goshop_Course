@@ -14,6 +14,7 @@ import ProductDetails from "@/components/dashboard/forms/product-details";
 
 // Columns
 import { columns } from "./columns";
+import { db } from "@/lib/db";
 
 export default async function SellerProductsPage({
   params
@@ -24,6 +25,11 @@ export default async function SellerProductsPage({
   const categories = await getAllCategories();
   const offerTags = await getAllOfferTags();
   const products = await getAllStoreProducts(resolvedParams.storeUrl);
+  const countries = await db.country.findMany({
+    orderBy: {
+      name: "asc",
+    }
+  });
 
   return <DataTable
     actionButtonText={
@@ -37,6 +43,7 @@ export default async function SellerProductsPage({
         offerTags={offerTags}
         categories={categories}
         storeUrl={resolvedParams.storeUrl}
+        countries={countries}
       />
     }
     newTabLink={`/dashboard/seller/stores/${resolvedParams.storeUrl}/products/new`}

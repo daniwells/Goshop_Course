@@ -1,6 +1,6 @@
-
 // Custom components
 import ProductDetails from "@/components/dashboard/forms/product-details";
+import { db } from "@/lib/db";
 
 // Queries
 import { getAllCategories } from "@/queries/category";
@@ -17,6 +17,11 @@ export default async function SellerNewProductVariantPage({
     const categories = await getAllCategories();
     const offerTags = await getAllOfferTags();
     const product = await getProductMainInfo(resolvedParams.productId);
+    const countries = await db.country.findMany({
+        orderBy: {
+            name: "asc",
+        }
+    });
     
     if(!product) return null;
 
@@ -26,6 +31,7 @@ export default async function SellerNewProductVariantPage({
             offerTags={offerTags}
             data={product}
             storeUrl={resolvedParams.storeUrl}
+            countries={countries}
         />
     </div>
 }

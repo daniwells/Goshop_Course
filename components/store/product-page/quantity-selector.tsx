@@ -1,7 +1,9 @@
+import { useCartStore } from "@/cart-store/userCartStore";
+import useFromStore from "@/hooks/useFromStore";
 import { Size } from "@/lib/generated/prisma/client";
 import { CartProductType } from "@/lib/types";
 import { Minus, Plus } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 interface Props {
     productId: string;
@@ -22,14 +24,26 @@ const QuantitySelector: React.FC<Props> = ({
     handleChange,
     sizes,
 }) => {
-    if(!sizeId) return null
+    if(!sizeId) return null;
+
+    const cart = useFromStore(useCartStore, (state) => state.cart);
 
     useEffect(() => {
         handleChange("quantity", 1);
     }, [sizeId]);
 
+    const maxQty = useMemo(() => {
+        const search_product = cart?.find((p) => 
+            p.productId === productId &&
+            p.variantId === variantId &&
+            p.sizeId === sizeId
+        );
+
+        return search_product ? search_product.stock - search_product.quantity : stock;
+    }, [cart, productId, variantId, sizeId, stock]);
+
     const handleIncrease = () => {
-        if(quantity < stock){
+        if(quantity < maxQty){
             handleChange("quantity", quantity + 1);
         }
     }
@@ -46,11 +60,17 @@ const QuantitySelector: React.FC<Props> = ({
                 <span className="block text-xs text-gray-500">
                     Select quantity
                 </span>
+                <span className="clock text-xs text-gray-500">
+                    {
+                        maxQty !== stock && `(You already have ${stock - maxQty} pieces of this product in cart)`
+                    }
+                </span>
                 <input
                     type="number"
                     className="w-full p-0 bg-transparent border-0 focus:outline-0 text-gray-800"
                     min={1}
-                    value={quantity}
+                    value={maxQty <= 0 ? 0 : quantity}
+                    max={maxQty}
                     readOnly
                 />
             </div>

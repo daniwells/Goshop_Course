@@ -1,11 +1,12 @@
 "use client";
 
 // React, Next.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 // Types
 import { CartProductType, ProductPageDataType } from "@/lib/types";
 import { cn, isProductValidToAdd } from "@/lib/utils/utils-client";
+import { ProductVariantImage } from "@/lib/generated/prisma/client";
 
 // Components
 import ProductSwiper from "./product-swiper";
@@ -15,7 +16,13 @@ import ShippingDetails from "./shipping/shipping-details";
 import ReturnSecurityPrivacyCard from "./returns-security-privacy-card";
 import QuantitySelector from "./quantity-selector";
 import SocialShare from "../shared/social-share";
-import { ProductVariantImage } from "@/lib/generated/prisma/client";
+
+// Toaster
+import toast from "react-hot-toast";
+
+// Cart Store
+import { useCartStore } from "@/cart-store/userCartStore";
+import useFromStore from "@/hooks/useFromStore";
 
 interface Props {
     productData: ProductPageDataType;
@@ -34,10 +41,6 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
     const [ activeImage, setActiveImage ] = useState<ProductVariantImage | null>(
         images[0]
     );
-
-    // console.log(productData)
-    // console.log(productData.images)
-    // console.log(productData.images[0].url)
     
     const data: CartProductType = {
         productId: productData.productId,
@@ -68,15 +71,38 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
 
     const handleChange = (property: keyof CartProductType, value: any) => {
         setProductToBeAddedToCart((prevProduct) => ({
-        ...prevProduct,
-        [property]: value,
+            ...prevProduct,
+            [property]: value,
         }));
     };
 
     useEffect(() => {
         const check = isProductValidToAdd(productToBeAddedToCart);
-        setIsProductValid(check)
-    },[productToBeAddedToCart])
+        setIsProductValid(check);
+    },[productToBeAddedToCart]);
+
+    const addToCart = useCartStore((state) => state.addToCart);
+
+    const cartItems = useFromStore(useCartStore, (state) => state.cart);
+
+    const handleAddToCart = () => {
+        if(maxQty <= 0) return;
+
+        addToCart(productToBeAddedToCart);
+        toast.success("Product added to cart successfully.");
+    }
+
+    const { stock } = productToBeAddedToCart;
+
+    const maxQty = useMemo(() => {
+        const search_product = cartItems?.find((p) => 
+            p.productId === productId &&
+            p.variantId === variantId &&
+            p.sizeId === sizeId
+        );
+
+        return search_product ? search_product.stock - search_product.quantity : stock;
+    }, [cartItems, productId, variantId, sizeId, stock]);
 
     return <div className="relative">
         <div className="w-full xl:flex xl:gap-4">
@@ -128,7 +154,10 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
                                         />
                                     </div>
                                 }
-                                <button className="relative w-full py-2.5 min-w-20 bg-orange-background hover:bg-orange-hover text-white h-11 rounded-3xl leading-6 inline-block font-bold whitespace-nowrap border border-orange-border cursor-pointer transition-all duration-300 ease-bezier-1 select-none">
+                                <button 
+                                    className="relative w-full py-2.5 min-w-20 bg-orange-background hover:bg-orange-hover text-white h-11 rounded-3xl leading-6 inline-block font-bold whitespace-nowrap border border-orange-border cursor-pointer transition-all duration-300 ease-bezier-1 select-none"
+                                    onClick={() => {}}
+                                >
                                     <span>
                                         Buy now
                                     </span>
@@ -136,8 +165,9 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
                                 <button 
                                     disabled={!isProductValid}
                                     className={cn("relative w-full py-2.5 min-w-20 bg-orange-border hover:bg-[#e4cdce] text-orange-hover h-11 rounded-3xl leading-6 inline-block font-bold whitespace-nowrap border border-orange-border cursor-pointer transition-all duration-300 ease-bezier-1 select-none",{
-                                        "cursor-not-allowed": !isProductValid
+                                        "cursor-not-allowed": !isProductValid || maxQty <= 0,
                                     })}
+                                    onClick={() => handleAddToCart()}
                                 >
                                     <span>
                                         Add to cart

@@ -64,7 +64,7 @@ export const upsertProduct = async (
       await handleProductCreate(product, store.id);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 };

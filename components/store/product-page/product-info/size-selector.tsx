@@ -22,7 +22,7 @@ const SizeSelector: React.FC<Props> = ({sizes, sizeId, handleChange}) => {
             if(search_size){
                 handleCartProductToBeAddedChange(search_size);
             }
-        }
+        }        
     }, []);
 
     const handleSelectSize = (size: Size) => {

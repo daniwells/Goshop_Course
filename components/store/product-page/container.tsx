@@ -77,6 +77,7 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
     };
 
     useEffect(() => {
+        console.log(productToBeAddedToCart)
         const check = isProductValidToAdd(productToBeAddedToCart);
         setIsProductValid(check);
     },[productToBeAddedToCart]);

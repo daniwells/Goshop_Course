@@ -132,7 +132,7 @@ type CensorReturn = {
   fullName: string;
 }
 
-function censorName(firstName: string, lastName: string): CensorReturn {
+export function censorName(firstName: string, lastName: string): CensorReturn {
   const censor = (name: string): string => {
     if(name.length <= 2) return name;
 

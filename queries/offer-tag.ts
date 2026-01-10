@@ -102,7 +102,7 @@ export const upsertOfferTag = async (offerTag: OfferTag) => {
     });
     return offerTagDetails;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 };
@@ -151,7 +151,7 @@ export const deleteOfferTag = async (offerTagId: string) => {
     });
     return response;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 };

@@ -13,7 +13,7 @@ import { notFound, redirect } from "next/navigation";
 interface PageProps {
     params: {productSlug: string, variantSlug: string};
     searchParams: {
-        sizeId?: string
+        size?: string
     }
 }
 
@@ -22,7 +22,8 @@ export default async function ProductVariantPage({
     searchParams,
 }: PageProps,) {
     const resolvedSearchParams = await searchParams;
-    const sizeId = resolvedSearchParams?.sizeId;
+
+    const sizeId = resolvedSearchParams?.size;
 
     const resolvedParams = await params;
     const productData = await getProductPageData(resolvedParams.productSlug, resolvedParams.variantSlug);

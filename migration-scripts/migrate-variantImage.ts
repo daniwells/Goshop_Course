@@ -22,6 +22,6 @@ export async function updateVariantImage (){
             }
         }
     }catch (error) {
-        console.log("Error updating variant images:", error);
+        console.error("Error updating variant images:", error);
     }
 }

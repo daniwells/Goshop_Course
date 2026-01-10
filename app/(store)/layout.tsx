@@ -14,7 +14,6 @@ export default function StoreLayout({
         <StoreHeader/>
         <CategoriesHeader/>
         <div>{children}</div>
-        <div className="h-96"></div>
         <Footer/>
         <Toaster position="top-center"/>
     </div>

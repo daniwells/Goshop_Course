@@ -270,7 +270,9 @@ const CartProduct: FC<Props> = ({
                                 >
                                     <Minus className="w-3 stroke-[#555]" />
                                 </div>
+                                
                                 <input
+                                    readOnly
                                     type="text"
                                     value={quantity}
                                     min={1}

@@ -61,7 +61,7 @@ export const upsertCategory = async (category: Category) => {
 
         return categoryDetails;
     } catch (error) {   
-        console.log(error);
+        console.error(error);
         throw error;
     }
 };

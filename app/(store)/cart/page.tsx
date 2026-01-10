@@ -8,6 +8,7 @@ import useFromStore from "@/hooks/useFromStore";
 import { CartProductType, Country } from "@/lib/types";
 import { useState } from "react";
 import CartProductCard from "@/components/store/cards/cart-product";
+import CartSummary from "@/components/store/cart-page/summary";
 
 export default function CartPage() {
     const cartItems = useFromStore(useCartStore, (state) => state.cart);
@@ -18,7 +19,7 @@ export default function CartPage() {
     return <div>
         {
             cartItems && cartItems.length > 0 ?
-                <div className="bg-[#f5f5f5]">
+                <div className="bg-[#f5f5f5] pb-96">
                     <div className="max-w-[1200px] mx-auto py-6 flex">
                         <div className="min-w-0 flex-1">
                             <CartHeader
@@ -30,6 +31,7 @@ export default function CartPage() {
                                 {
                                     cartItems.map((product) => (
                                         <CartProductCard
+                                            key={product.productId}
                                             product={product}
                                             selectedItems={selectedItems}
                                             setSelectedItems={setSelectedItems}
@@ -40,6 +42,10 @@ export default function CartPage() {
                             </div>
                         </div>
                         <div className="sticky to-4 ml-5 w-[380px] max-h-max">
+                            <CartSummary
+                                cartItems={cartItems}
+                                shippingFees={totalShipping}
+                            />
                             <div className="mt-2 p-4 bg-white px-6">
                                 <FastDelivery/>
                             </div>
@@ -50,7 +56,7 @@ export default function CartPage() {
                     </div>
                 </div>
             :
-                <div>No product</div>
+                <div className="pb-96 pt-24 pl-24" >No product</div>
         }
         
     </div>

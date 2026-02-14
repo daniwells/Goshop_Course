@@ -28,7 +28,7 @@ interface Props {
     selectedItems: CartProductType[];
     setSelectedItems: Dispatch<SetStateAction<CartProductType[]>>;
     setTotalShipping: Dispatch<SetStateAction<number>>;
-    // userCountry: Country;
+    userCountry: Country;
 }
 
 const CartProduct: FC<Props> = ({
@@ -36,7 +36,7 @@ const CartProduct: FC<Props> = ({
     selectedItems,
     setSelectedItems,
     setTotalShipping,
-    // userCountry,
+    userCountry,
 }) => {
     const {
         productId,
@@ -59,7 +59,7 @@ const CartProduct: FC<Props> = ({
     } = product;
 
     const prevShippingFeeRef = useRef(shippingFee);
-    // const prevUserCountryRef = useRef(userCountry);
+    const prevUserCountryRef = useRef(userCountry);
 
     const unique_id = `${productId}-${variantId}-${sizeId}`;
 
@@ -107,19 +107,18 @@ const CartProduct: FC<Props> = ({
 
     useEffect(() => {
         if (
-            shippingFee !== prevShippingFeeRef.current 
-            // || userCountry !== prevUserCountryRef.current
+            shippingFee !== prevShippingFeeRef.current || userCountry !== prevUserCountryRef.current
         ) {
             calculateShipping();
         }
 
         prevShippingFeeRef.current = shippingFee;
-        // prevUserCountryRef.current = userCountry;
+        prevUserCountryRef.current = userCountry;
 
         if (!shippingInfo.totalFee) {
             calculateShipping();
         }
-    }, [quantity, shippingFee, shippingInfo.totalFee, stock]);
+    }, [quantity, shippingFee, userCountry, shippingInfo.totalFee, stock]);
 
     const selected = selectedItems.find(
         (p) => unique_id === `${p.productId}-${p.variantId}-${p.sizeId}`

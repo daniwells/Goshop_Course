@@ -1,4 +1,5 @@
 import { CartProductType } from "@/lib/types"
+import { Sumana } from "next/font/google";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -16,6 +17,7 @@ interface Actions {
     removeMultipleFromCart: (items: CartProductType[]) => void;
     removeFromCart: (Item: CartProductType) => void;
     emptyCart: () => void;
+    setCart: (newCart: CartProductType[]) => void;
 };
 
 // Initialize a default state
@@ -116,6 +118,15 @@ export const useCartStore = create(
                 totalPrice: 0,
             }))
         },
+        setCart: (newCart: CartProductType[]) => {
+            const totalItems = newCart.length;
+            const totalPrice = newCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            set(() =>({
+                cart: newCart,
+                totalItems,
+                totalPrice,
+            }));
+        }
     }),
     {
         name: "cart",

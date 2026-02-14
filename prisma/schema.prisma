@@ -22,13 +22,15 @@ model User {
   picture String @db.Text
   role    Role   @default(USER)
 
+  stores            Store[]           @relation("UserStores")
+  following         Store[]           @relation("UserFollowingStore")
+  reviews           Review[]          @relation("ReviewToUser")
+  cart              Cart?             @relation("UserCart")
+  shippingAddresses ShippingAddress[] @relation("UserShippingAddresses")
+  orders            Order[]           @relation("UserOrders")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-
-  stores    Store[]  @relation("UserStores")
-  following Store[]  @relation("UserFollowingStore")
-  reviews   Review[] @relation("ReviewToUser")
-  cart      Cart?    @relation("UserCart")
 }
 
 model Category {
@@ -101,6 +103,7 @@ model Store {
   shippingRates ShippingRate[] @relation("StoreShippingRates")
   followers     User[]         @relation("UserFollowingStore")
   cartItems     CartItem[]     @relation("CartItemToStore")
+  orderGroups   OrderGroup[]   @relation("OrderGroupToStore")
 
   @@index([userId])
 }
@@ -267,6 +270,7 @@ model Country {
 
   shippingRates         ShippingRate[]        @relation("CountryShippingRates")
   freeShippingCountries FreeShippingCountry[] @relation("FreeShippingToCountry")
+  shippingAddresses     ShippingAddress[]     @relation("CountryToShippingAddress")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -405,4 +409,133 @@ model CartItem {
 
   @@index([cartId])
   @@index([storeId])
+}
+
+model ShippingAddress {
+  id        String  @id @default(uuid())
+  firstName String
+  lastName  String
+  phone     String
+  address1  String
+  address2  String
+  state     String
+  city      String
+  zip_code  String
+  default   Boolean @default(false)
+
+  userId String
+  user   User   @relation("UserShippingAddresses", fields: [userId], references: [id])
+
+  countryId String
+  country   Country @relation("CountryToShippingAddress", fields: [countryId], references: [id])
+
+  orders Order[] @relation("ShippingAddressToOrder")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([countryId])
+  @@index([userId])
+}
+
+enum OrderStatus {
+  Pending
+  Confirmed
+  Processing
+  Shipped
+  OutForDelivery
+  Delivered
+  Cancelled
+  Failed
+  Refunded
+  Returned
+  PartiallyShipped
+  OnHold
+}
+
+enum PaymentStatus {
+  Pending
+  Paid
+  Failed
+  Declined
+  Cancelled
+  Refunded
+  PartiallyRefunded
+  Chargeback
+}
+
+model Order {
+  id           String @id @default(uuid())
+  shippingFees Float
+  subTotal     Float
+  total        Float
+
+  groups OrderGroup[] @relation("OrderGroupToOrder")
+
+  orderStatus   OrderStatus   @default(Pending)
+  paymentStatus PaymentStatus @default(Pending)
+
+  shippingAddressId String
+  shippingAddress   ShippingAddress @relation("ShippingAddressToOrder", fields: [shippingAddressId], references: [id])
+
+  userId String
+  user   User   @relation("UserOrders", fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([shippingAddressId])
+  @@index([userId])
+}
+
+model OrderGroup {
+  id                  String      @id @default(uuid())
+  status              OrderStatus @default(Pending)
+  shippingService     String
+  shippingDeliveryMin Int
+  shippingDeliveryMax Int
+  shippingFees        Float
+  subTotal            Float
+  total               Float
+
+  orderId String
+  order   Order  @relation("OrderGroupToOrder", fields: [orderId], references: [id])
+
+  storeId String
+  store   Store  @relation("OrderGroupToStore", fields: [storeId], references: [id])
+
+  items OrderItem[] @relation("OrderItemToGroup")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([orderId])
+  @@index([storeId])
+}
+
+model OrderItem {
+  id String @id @default(uuid())
+
+  productId String
+  variantId String
+  sizeId    String
+
+  productSlug String
+  variantSlug String
+  sku         String
+  name        String
+  image       String
+  size        String
+  quantity    Int    @default(1)
+  shippingFee Float  @default(0)
+  price       Float
+  totalPrice  Float
+
+  orderGroupId String
+  orderGroup   OrderGroup @relation("OrderItemToGroup", fields: [orderGroupId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([orderGroupId])
 }

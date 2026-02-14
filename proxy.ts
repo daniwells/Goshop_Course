@@ -5,6 +5,7 @@ import { getUserCountry } from './lib/utils/utils-server';
 const isProtectedRoute = createRouteMatcher([
   '/dashboard',
   '/dashboard/(.*)',
+  '/checkout',
 ])
 
 export default clerkMiddleware(async (auth, req) => {

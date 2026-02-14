@@ -1,7 +1,19 @@
 import { getAllSubCategories } from "@/queries/subCategory";
 import { getAllStoreProducts, getRatingStatistics, getShippingDetails } from "@/queries/product";
 import { getStoreDefaultShippingDetails } from "@/queries/store";
-import { Color, FreeShipping, FreeShippingCountry, Review, ReviewImage, ShippingFeeMethod, ShippingRate } from "./generated/prisma/client";
+import { 
+  Cart,
+  CartItem,
+  Color,
+  FreeShipping,
+  FreeShippingCountry,
+  Review,
+  ReviewImage,
+  ShippingAddress,
+  ShippingFeeMethod,
+  ShippingRate,
+  Country as CountryPrisma
+} from "./generated/prisma/client";
 import countries from "@/data/countries.json";
 import { getProducts } from "@/queries/product";
 import { ProductVariantImage, Size } from "./generated/prisma/client";
@@ -173,4 +185,10 @@ export type ReviewDetailsType = {
   quantity: string;
   variant: string;
   color: string;
+}
+
+export type CartWithCartItemsType = Cart & {cartItems: CartItem[]};
+
+export type UserShippingAddressType = ShippingAddress & {
+  country: CountryPrisma;
 }

@@ -11,10 +11,10 @@ export default function StoreLayout({
     children: ReactNode 
 }) {
     return <div className="!light">
-        <StoreHeader/>
-        <CategoriesHeader/>
+        {/* <StoreHeader/>
+        <CategoriesHeader/> */}
         <div>{children}</div>
-        <Footer/>
+        {/* <Footer/> */}
         <Toaster position="top-center"/>
     </div>
 }

@@ -11,6 +11,7 @@ import { SecurityPrivacyCard } from "../product-page/returns-security-privacy-ca
 import CartProductCard from "@/components/store/cards/cart-product";
 import EmptyCart from "./empty-cart";
 import { updateCartWithLatest } from "@/queries/user";
+import CountryNote from "./country-note";
 
 export default function CartContainer({
     userCountry
@@ -66,6 +67,9 @@ export default function CartContainer({
                                             selectedItems={selectedItems}
                                             setSelectedItems={setSelectedItems}
                                         />
+                                        <div className="my-2">
+                                            <CountryNote country={userCountry.name} />
+                                        </div>
                                         <div className="h-auto overflow-x-hidden overflow-auto mt-2">
                                             {
                                                 cartItems.map((product) => (

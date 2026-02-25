@@ -82,8 +82,34 @@ export const ProductPageContainer: React.FC<Props> = ({ productData, sizeId, chi
     },[productToBeAddedToCart]);
 
     const addToCart = useCartStore((state) => state.addToCart);
+    const setCart = useCartStore((state) => state.setCart);
 
     const cartItems = useFromStore(useCartStore, (state) => state.cart);
+
+    useEffect(() => {
+        const handleStoreChange = (event: StorageEvent) => {
+            if(event.key === "cart"){
+                try{
+                    const parsedValue = event.newValue ? JSON.parse(event.newValue) : null;
+                    
+                    if(
+                        parsedValue && 
+                        parsedValue.state && 
+                        Array.isArray(parsedValue.state.cart)
+                    ){
+                        setCart(parsedValue.state.state.cart)
+                    }
+                }catch (error){
+                    console.error("Failed to parse updated cart data:", error);
+                }
+            }
+        }
+
+        window.addEventListener("storage", handleStoreChange);
+        return () => {
+            window.removeEventListener("storage", handleStoreChange);
+        }
+    }, [])
 
     const handleAddToCart = () => {
         if(maxQty <= 0) return;

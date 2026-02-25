@@ -3,9 +3,9 @@
 import { ProductType, VariantSimplified } from "@/lib/types";
 import Link from "next/link";
 import { useState } from "react";
-
 import dynamic from "next/dynamic";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 const ReactStars = dynamic(() => import("react-rating-stars-component"), {
   ssr: false,
@@ -16,11 +16,21 @@ import VariantSwitcher from "./variant-switcher";
 import { Button } from "../../ui/button";
 import { Heart } from "lucide-react";
 import ProductPrice from "../../product-page/product-info/product-price";
+import { addToWishlist } from "@/queries/user";
 
 export default function ProductCard({ product }: { product: ProductType }) {
-    const { name, slug, rating, sales, variantImages, variants } = product;
+    const { name, slug, rating, sales, variantImages, variants, id } = product;
     const [variant, setVariant] = useState<VariantSimplified>(variants[0]);
-    const { variantSlug, variantName, images, sizes } = variant
+    const { variantSlug, variantName, images, sizes } = variant;
+
+    const handleaddToWishlist = async () => {
+        try {
+            const res = await addToWishlist(id, variant.variantId);
+            if (res) toast.success("Product successfully added to wishlist.");
+        } catch (error: any) {
+            toast.error(error.toString());
+        }
+    };
 
     return <div>
         <div className="group w-48 sm:w-[225px] relative transition-all duration-75 bg-white ease-in-out p-4 rounded-t-3xl border border-transparent hover:shadow-xl hover:border-border">
@@ -66,7 +76,11 @@ export default function ProductCard({ product }: { product: ProductType }) {
                     <Button>
                         Add to cart
                     </Button>
-                    <Button variant="black" size="icon">
+                    <Button 
+                        variant="black"
+                        size="icon"
+                        onClick={() => handleaddToWishlist()}
+                    >
                         <Heart className="w-5"/>
                     </Button>
                 </div>

@@ -105,18 +105,40 @@ export const useCartStore = create(
                 totalItems,
                 totalPrice,
             }));
+
+            localStorage.setItem("cart", JSON.stringify(updatedCart));
         },
         removeMultipleFromCart: (products: CartProductType[]) => {
-            products.forEach((product) => {
-                get().removeFromCart(product);
-            })
+            const cart = get().cart;
+            const updatedCart = cart.filter(
+                (item) => 
+                    !products.some(
+                        (product) => 
+                            item.productId === product.productId &&
+                            item.variantId === product.variantId &&
+                            item.sizeId === product.sizeId
+                )
+            );
+
+            const totalItems = updatedCart.length;
+            const totalPrice = updatedCart.reduce(
+                (sum, item) => sum+item.price * item.quantity, 0
+            );
+            set(() => ({
+                cart: updatedCart,
+                totalItems,
+                totalPrice,
+            }));
+
+            localStorage.setItem("cart", JSON.stringify(updatedCart));
         },
         emptyCart: () => {
             set(() => ({
                 cart: [],
                 totalItems: 0,
                 totalPrice: 0,
-            }))
+            }));
+            localStorage.removeItem("cart");
         },
         setCart: (newCart: CartProductType[]) => {
             const totalItems = newCart.length;

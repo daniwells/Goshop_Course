@@ -1,6 +1,7 @@
 import { useCartStore } from "@/cart-store/userCartStore";
 import { CartProductType, Country } from "@/lib/types";
 import { cn } from "@/lib/utils/utils-client";
+import { addToWishlist } from "@/queries/user";
 // import { addToWishlist } from "@/queries/user";
 import {
     Check,
@@ -152,9 +153,8 @@ const CartProduct: FC<Props> = ({
 
     const handleaddToWishlist = async () => {
         try {
-            // Add to wish list
-            // const res = await addToWishlist(productId, variantId, sizeId);
-            // if (res) toast.success("Product successfully added to wishlist.");
+            const res = await addToWishlist(productId, variantId, sizeId);
+            if (res) toast.success("Product successfully added to wishlist.");
         } catch (error: any) {
             toast.error(error.toString());
         }
@@ -221,106 +221,106 @@ const CartProduct: FC<Props> = ({
                                 {name} · {variantName}
                             </Link>
                             <div className="absolute top-0 right-0">
-                            <span
-                                className="mr-2.5 cursor-pointer inline-block"
-                                onClick={() => handleaddToWishlist()}
-                            >
-                                <Heart className="w-4 hover:stroke-orange-seconadry" />
-                            </span>
-                            <span
-                                className="cursor-pointer inline-block"
-                                onClick={() => removeFromCart(product)}
-                            >
-                                <Trash className="w-4 hover:stroke-orange-seconadry" />
-                            </span>
-                        </div>
-                    </div>
-                    <div className="my-1">
-                        <button className="text-main-primary relative h-[24px] bg-gray-100 whitespace-normal px-2.5 py-0 max-w-full text-xs leading-4 rounded-xl font-bold cursor-pointer  outline-0">
-                            <span className="flex items-center justify-between flex-wrap">
-                                <div className="text-left inline-block overflow-hidden text-ellipsis whitespace-nowrap max-w-[95%]">
-                                    {size}
-                                </div>
-                                <span className="ml-0.5">
-                                    <ChevronRight className="w-3" />
+                                <span
+                                    className="mr-2.5 cursor-pointer inline-block"
+                                    onClick={() => handleaddToWishlist()}
+                                >
+                                    <Heart className="w-4 hover:stroke-orange-seconadry" />
                                 </span>
-                            </span>
-                        </button>
-                    </div>
-                    <div className="flex items-center justify-between mt-2 relative">
-                        {stock > 0 ? (
-                            <div>
-                                <span className="inline-block break-all">
-                                    ${price.toFixed(2)} x {quantity} = ${totalPrice.toFixed(2)}
+                                <span
+                                    className="cursor-pointer inline-block"
+                                    onClick={() => removeFromCart(product)}
+                                >
+                                    <Trash className="w-4 hover:stroke-orange-seconadry" />
                                 </span>
                             </div>
-                        ) : (
-                            <div>
-                                <span className="inline-block break-all text-sm text-red-500">
-                                Out of stock
+                        </div>
+                        <div className="my-1">
+                            <button className="text-main-primary relative h-[24px] bg-gray-100 whitespace-normal px-2.5 py-0 max-w-full text-xs leading-4 rounded-xl font-bold cursor-pointer  outline-0">
+                                <span className="flex items-center justify-between flex-wrap">
+                                    <div className="text-left inline-block overflow-hidden text-ellipsis whitespace-nowrap max-w-[95%]">
+                                        {size}
+                                    </div>
+                                    <span className="ml-0.5">
+                                        <ChevronRight className="w-3" />
+                                    </span>
                                 </span>
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-between mt-2 relative">
+                            {stock > 0 ? (
+                                <div>
+                                    <span className="inline-block break-all">
+                                        ${price.toFixed(2)} x {quantity} = ${totalPrice.toFixed(2)}
+                                    </span>
+                                </div>
+                            ) : (
+                                <div>
+                                    <span className="inline-block break-all text-sm text-red-500">
+                                    Out of stock
+                                    </span>
+                                </div>
+                            )}
+                            <div className="text-xs">
+                                <div className="text-gray-900 text-sm leading-6 list-none inline-flex items-center">
+                                    <div
+                                        className="w-6 h-6 text-xs bg-gray-100 hover:bg-gray-200 leading-6 grid place-items-center rounded-full cursor-pointer"
+                                        onClick={() => updateProductQuantityHandler("remove")}
+                                    >
+                                        <Minus className="w-3 stroke-[#555]" />
+                                    </div>
+                                    
+                                    <input
+                                        readOnly
+                                        type="text"
+                                        value={quantity}
+                                        min={1}
+                                        max={stock}
+                                        className="m-1 h-6 w-[32px] bg-transparent border-none leading-6 tracking-normal text-center outline-none text-gray-900 font-bold"
+                                    />
+                                    <div
+                                        className="w-6 h-6 text-xs bg-gray-100 hover:bg-gray-200 leading-6 grid place-items-center rounded-full cursor-pointer"
+                                        onClick={() => updateProductQuantityHandler("add")}
+                                    >
+                                        <Plus className="w-3 stroke-[#555]" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {stock > 0 && (
+                            <div className="mt-1 text-xs text-[#999] cursor-pointer">
+                                <div className="flex items-center mb-1">
+                                    <span>
+                                        <Truck className="w-4 inline-block text-[#01A971]" />
+                                        {shippingInfo.totalFee > 0 ? (
+                                            <span className="text-[#01A971] ml-1">
+                                                {shippingMethod === "ITEM" ? (
+                                                    <>
+                                                        ${shippingInfo.initialFee} (first item)
+                                                        {quantity > 1
+                                                            ? `+ 
+                                                            ${quantity - 1} item(s) x $${extraShippingFee}
+                                                            (additional items)`
+                                                            : " x 1"}
+                                                        = ${shippingInfo.totalFee.toFixed(2)}
+                                                    </>
+                                                ) : shippingMethod === "WEIGHT" ? (
+                                                    <>
+                                                        ${shippingFee} x {shippingInfo.weight}kg x&nbsp;
+                                                        {quantity} {quantity > 1 ? "items" : "item"} = $
+                                                        {shippingInfo.totalFee.toFixed(2)}
+                                                    </>
+                                                ) : (
+                                                    <>Fixed Fee : ${shippingInfo.totalFee.toFixed(2)}</>
+                                                )}
+                                            </span>
+                                        ) : (
+                                            <span className="text-[#01A971] ml-1">Free Delivery</span>
+                                        )}
+                                    </span>
+                                </div>
                             </div>
                         )}
-                        <div className="text-xs">
-                            <div className="text-gray-900 text-sm leading-6 list-none inline-flex items-center">
-                                <div
-                                    className="w-6 h-6 text-xs bg-gray-100 hover:bg-gray-200 leading-6 grid place-items-center rounded-full cursor-pointer"
-                                    onClick={() => updateProductQuantityHandler("remove")}
-                                >
-                                    <Minus className="w-3 stroke-[#555]" />
-                                </div>
-                                
-                                <input
-                                    readOnly
-                                    type="text"
-                                    value={quantity}
-                                    min={1}
-                                    max={stock}
-                                    className="m-1 h-6 w-[32px] bg-transparent border-none leading-6 tracking-normal text-center outline-none text-gray-900 font-bold"
-                                />
-                                <div
-                                    className="w-6 h-6 text-xs bg-gray-100 hover:bg-gray-200 leading-6 grid place-items-center rounded-full cursor-pointer"
-                                    onClick={() => updateProductQuantityHandler("add")}
-                                >
-                                    <Plus className="w-3 stroke-[#555]" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {stock > 0 && (
-                        <div className="mt-1 text-xs text-[#999] cursor-pointer">
-                            <div className="flex items-center mb-1">
-                                <span>
-                                    <Truck className="w-4 inline-block text-[#01A971]" />
-                                    {shippingInfo.totalFee > 0 ? (
-                                        <span className="text-[#01A971] ml-1">
-                                            {shippingMethod === "ITEM" ? (
-                                                <>
-                                                    ${shippingInfo.initialFee} (first item)
-                                                    {quantity > 1
-                                                        ? `+ 
-                                                        ${quantity - 1} item(s) x $${extraShippingFee} 
-                                                        (additional items)`
-                                                        : " x 1"}
-                                                    = ${shippingInfo.totalFee.toFixed(2)}
-                                                </>
-                                            ) : shippingMethod === "WEIGHT" ? (
-                                                <>
-                                                    ${shippingFee} x {shippingInfo.weight}kg x&nbsp;
-                                                    {quantity} {quantity > 1 ? "items" : "item"} = $
-                                                    {shippingInfo.totalFee.toFixed(2)}
-                                                </>
-                                            ) : (
-                                                <>Fixed Fee : ${shippingInfo.totalFee.toFixed(2)}</>
-                                            )}
-                                        </span>
-                                    ) : (
-                                        <span className="text-[#01A971] ml-1">Free Delivery</span>
-                                    )}
-                                </span>
-                            </div>
-                        </div>
-                    )}
                     </div>
                 </div>
             </div>

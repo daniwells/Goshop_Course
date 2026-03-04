@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { emptyUserCart, placeOrder } from "@/queries/user";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/cart-store/userCartStore";
+import { cn } from "@/lib/utils/utils-client";
 
 interface Props {
     shippingFees: number;
@@ -44,42 +45,10 @@ const PlaceOrderCard: React.FC<Props> = ({
             <h1 className="text-gray-900 text-2xl font-bold mb-4">
                 Summary
             </h1>
-            <div className="mt-4 font-medium flex items-center text-[#222] text-sm">
-                <h2 className="overflow-hidden whitespace-nowrap text-ellipsis break-normal">
-                    Subtotal
-                </h2>
-                <h3 className="flex-1 w-0 min-w-0 text-right">
-                    <span className="px-0.5 text-2xl text-black">
-                        <div className="text-black text-xl inline-block break-all">
-                            ${subTotal.toFixed(2)}
-                        </div>
-                    </span>
-                </h3>
-            </div>
-            <div className="mt-4 font-medium flex items-center text-[#222] text-sm">
-                <h2 className="overflow-hidden whitespace-nowrap text-ellipsis break-normal">
-                    Shipping fees
-                </h2>
-                <h3 className="flex-1 w-0 min-w-0 text-right">
-                    <span className="px-0.5 text-2xl text-black">
-                        <div className="text-black text-xl inline-block break-all">
-                            ${shippingFees.toFixed(2)}
-                        </div>
-                    </span>
-                </h3>
-            </div>
-            <div className="mt-4 font-medium flex items-center text-[#222] text-sm">
-                <h2 className="overflow-hidden whitespace-nowrap text-ellipsis break-normal">
-                    Total
-                </h2>
-                <h3 className="flex-1 w-0 min-w-0 text-right">
-                    <span className="px-0.5 text-2xl text-black">
-                        <div className="text-black text-xl inline-block break-all">
-                            ${total.toFixed(2)}
-                        </div>
-                    </span>
-                </h3>
-            </div>
+            <Info title="Subtotal" text={`${subTotal.toFixed(2)}`}/>
+            <Info title="Shipping Fees" text={`+${subTotal.toFixed(2)}`}/>
+            <Info title="Taxes" text={`+0.00`}/>
+            <Info title="Total" text={`+${total.toFixed(2)}`} isBold noBorder/>
         </div>
         <div className="pt-2.5">
             <Button onClick={() => handlePlaceOrder()} >
@@ -96,3 +65,32 @@ const PlaceOrderCard: React.FC<Props> = ({
 }
  
 export default PlaceOrderCard;
+
+const Info = ({
+    title,
+    text,
+    isBold,
+    noBorder
+}: { 
+    title: string;
+    text: string;
+    isBold?: boolean;
+    noBorder?: boolean
+}) => {
+
+    return <div className={cn("mt-4 font-medium flex items-center text-[#222] text-sm pb-1 border-b", {
+        "font-bold": isBold,
+        "border-b-0": noBorder
+    })}>
+        <h2 className="overflow-hidden whitespace-nowrap text-ellipsis break-normal">
+            {title}
+        </h2>
+        <h3 className="flex-1 w-0 min-w-0 text-right">
+            <span className="px-0.5 text-2xl text-black">
+                <div className="text-black text-xl inline-block break-all">
+                    {text}
+                </div>
+            </span>
+        </h3>
+    </div>
+}

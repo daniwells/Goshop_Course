@@ -4,7 +4,7 @@
 import { db } from "@/lib/db";
 
 // Types
-import { FreeShippingWithCountriesType, ProductPageType, ProductShippingDetailsType, ProductWithVariantType, RatingStatisticsType, ReviewsOrderType, SortOrder, VariantImageType, VariantSimplified } from "@/lib/types";
+import { Country, FreeShippingWithCountriesType, ProductPageType, ProductShippingDetailsType, ProductWithVariantType, RatingStatisticsType, ReviewsOrderType, SortOrder, VariantImageType, VariantSimplified } from "@/lib/types";
 import { generateUniqueSlug } from "@/lib/utils/utils-server";
 import { FreeShipping, Store } from "@/lib/generated/prisma/client";
 
@@ -991,3 +991,73 @@ export const getDeliveryDetailsForStoreByCountry = async (
         deliveryTimeMin,
     }
 }
+
+// Function: getProductShippingFee
+// Description: Retrieves and calculates shipping fee based on user country and product.
+// Access Level: Public
+// Parameters:
+//   - shippingFeeMethod: The shipping fee method of the product.
+//   - userCountry: The parsed user country object from cookies.
+//   - store :  store details.
+//   - freeShipping.
+//   - weight.
+//   - quantity.
+// Returns: Calculated total shipping fee for product.
+export const getProductShippingFee = async (
+    shippingFeeMethod: string,
+    userCountry: Country,
+    store: Store,
+    freeShipping: FreeShippingWithCountriesType | null,
+    weight: number,
+    quantity: number
+) => {
+    const country = await db.country.findUnique({
+        where: {
+            name: userCountry.name,
+            code: userCountry.code,
+        },
+    });
+
+    if (country) {
+        if (freeShipping) {
+            const free_shipping_countries = freeShipping.eligibaleCountries;
+            const isEligableForFreeShipping = free_shipping_countries.some(
+                (c) => c.countryId === country.name
+            );
+            if (isEligableForFreeShipping) {
+                return 0;
+            }
+        }
+
+        const shippingRate = await db.shippingRate.findFirst({
+            where: {
+                countryId: country.id,
+                storeId: store.id,
+            },
+        });
+
+        const {
+            shippingFeePerItem = store.defaultShippingFeePerItem,
+            shippingFeeForAdditionalItem = store.defaultShippingFeeForAdditionalItem,
+            shippingFeePerKg = store.defaultShippingFeePerKg,
+            shippingFeeFixed = store.defaultShippingFeeFixed,
+        } = shippingRate || {};
+
+        const additionalItemsQty = quantity - 1;
+
+        const feeCalculators: Record<string, () => number> = {
+            ITEM: () => shippingFeePerItem + shippingFeeForAdditionalItem * additionalItemsQty,
+            WEIGHT: () => shippingFeePerKg * weight * quantity,
+            FIXED: () => shippingFeeFixed,
+        };
+
+        const calculateFee = feeCalculators[shippingFeeMethod];
+        if (calculateFee) {
+            return calculateFee();
+        }
+
+        return 0;
+    }
+
+    return 0;
+};

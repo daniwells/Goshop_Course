@@ -2,13 +2,14 @@
 
 import { currentUser } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
-import { CartProductType, Country } from "@/lib/types";
+import { CartProductType, CartWithCartItemsType, Country } from "@/lib/types";
 import { getCookie } from "cookies-next";
 import { cookies } from "next/headers";
 import { getTouchRippleUtilityClass } from "@mui/material/ButtonBase";
-import { getDeliveryDetailsForStoreByCountry, getShippingDetails } from "./product";
-import { ShippingAddress } from "@/lib/generated/prisma/client";
+import { getDeliveryDetailsForStoreByCountry, getProductShippingFee, getShippingDetails } from "./product";
+import { CartItem, ShippingAddress } from "@/lib/generated/prisma/client";
 import { FaCity } from "react-icons/fa";
+import { Country as CountryDB } from "@/lib/generated/prisma/client";
 
 /**
  * @name followStore
@@ -749,4 +750,192 @@ export const addToWishlist = async (
     } catch (error) {
         throw error;
     }
+};
+
+/*
+ * Function: updateCheckoutProductstWithLatest
+ * Description: Keeps the cart updated with latest info (price,qty,shipping fee...).
+ * Permission Level: Public
+ * Parameters:
+ *   - cartProducts: An array of product objects from the frontend cart.
+ *   - address: Country.
+ * Returns:
+ *   - An object containing the updated cart with recalculated total price and validated product data.
+ */
+export const updateCheckoutProductstWithLatest = async (
+  cartProducts: CartItem[],
+  address: CountryDB | undefined
+): Promise<CartWithCartItemsType> => {
+    const validatedCartItems = await Promise.all(
+        cartProducts.map(async (cartProduct) => {
+            const { productId, variantId, sizeId, quantity } = cartProduct;
+
+            const product = await db.product.findUnique({
+                where: {
+                    id: productId,
+                },
+                include: {
+                    store: true,
+                    freeShipping: {
+                        include: {
+                            eligibaleCountries: true,
+                        },
+                    },
+                    variants: {
+                        where: {
+                            id: variantId,
+                        },
+                        include: {
+                            sizes: {
+                                where: {
+                                    id: sizeId,
+                                },
+                            },
+                            images: true,
+                        },
+                    },
+                },
+            });
+
+            if (
+                !product ||
+                product.variants.length === 0 ||
+                product.variants[0].sizes.length === 0
+            ) {
+                throw new Error(
+                    `Invalid product, variant, or size combination for productId ${productId}, variantId ${variantId}, sizeId ${sizeId}`
+                );
+            }
+
+            const variant = product.variants[0];
+            const size = variant.sizes[0];
+
+            const countryCookie = await getCookie("userCountry", { cookies });
+
+            const country = address
+                ? address
+                : countryCookie
+                ? JSON.parse(countryCookie)
+                : null;
+
+            if (!country) {
+                throw new Error("Couldn't retrieve country data");
+            }
+
+            let shippingFee = 0;
+
+            const { shippingFeeMethod, freeShipping, store } = product;
+
+            const fee = await getProductShippingFee(
+                shippingFeeMethod,
+                country,
+                store,
+                freeShipping,
+                variant.weight ?? 0,
+                quantity
+            );
+
+            if (fee) {
+                shippingFee = fee;
+            }
+
+            const price = size.discount
+                ? size.price - (size.price * size.discount) / 100
+                : size.price;
+
+            const validated_qty = Math.min(quantity, size.quantity);
+
+            const totalPrice = price * validated_qty + shippingFee;
+
+            try {
+                const newCartItem = await db.cartItem.update({
+                    where: {
+                        id: cartProduct.id,
+                    },
+                    data: {
+                        name: `${product.name} · ${variant.variantName}`,
+                        image: variant.images[0].url,
+                        price,
+                        quantity: validated_qty,
+                        shippingFee,
+                        totalPrice,
+                    },
+                });
+                return newCartItem;
+            } catch (error) {
+                return cartProduct;
+            }
+        })
+    );
+
+    const subTotal = validatedCartItems.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+    );
+
+    const shippingFees = validatedCartItems.reduce(
+        (acc, item) => acc + item.shippingFee,
+        0
+    );
+
+    let total = subTotal + shippingFees;
+
+    const cart = await db.cart.update({
+        where: {
+            id: cartProducts[0].cartId,
+        },
+        data: {
+            subTotal,
+            shippingFees,
+            total,
+        },
+        include: {
+            cartItems: true,
+            // coupon: {
+            //     include: {
+            //         store: true,
+            //     },
+            // },
+        },
+    });
+
+    if (!cart) throw new Error("Somethign went wrong!");
+
+    return cart;
+
+    // const cartCoupon = await db.cart.findUnique({
+    //     where: {
+    //         id: cartProducts[0].cartId,
+    //     },
+    //     select: {
+    //         coupon: {
+    //             include: {
+    //                 store: true,
+    //             },
+    //         },
+    //     },
+    // });
+
+    // if (cartCoupon?.coupon) {
+    //     const { coupon } = cartCoupon;
+
+    //     const currentDate = new Date();
+    //     const startDate = new Date(coupon.startDate);
+    //     const endDate = new Date(coupon.endDate);
+
+    //     if (currentDate > startDate && currentDate < endDate) {
+    //         const applicableStoreItems = validatedCartItems.filter(
+    //             (item) => item.storeId === coupon.storeId
+    //         );
+
+    //     if (applicableStoreItems.length > 0) {
+    //         const storeSubTotal = applicableStoreItems.reduce(
+    //         (acc, item) => acc + item.price * item.quantity + item.shippingFee,
+    //         0
+    //         );
+    //         const discountedAmount = (storeSubTotal * coupon.discount) / 100;
+    //         total -= discountedAmount;
+    //     }
+    //     }
+    // }
 };
